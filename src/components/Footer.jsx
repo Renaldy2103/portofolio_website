@@ -7,7 +7,7 @@ function Footer() {
         {/* Bagian Kiri: Nama Berukuran Raksasa dengan Warna Gelap */}
         <div className="text-center md:text-left w-full md:w-auto">
           {/* Menggunakan font-display dan warna biru-abu gelap (#1e2a38) agar menyerupai watermark */}
-          <h2 className="font-display text-5xl md:text-6xl lg:text-[50px] uppercase text-[#1e2a38] leading-[0.9] tracking-normal">
+        <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-[50px] uppercase text-[#1e2a38] leading-[0.9] tracking-normal">
           MOCH RENALDY <br className="hidden md:block lg:hidden" /> SYAPUTRA
         </h2>
         </div>  

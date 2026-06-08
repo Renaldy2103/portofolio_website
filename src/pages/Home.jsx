@@ -209,7 +209,8 @@ function Home() {
         <section className="flex flex-col lg:flex-row items-center justify-between gap-16 min-h-[75vh] mb-40 relative scroll-reveal-target" id="home">
           <div className="flex-1 order-2 lg:order-1 text-center lg:text-left">
             <p className="text-primary font-label-caps tracking-[0.3em] mb-6 uppercase">Halo, Saya Moch Renaldy Syaputra</p>
-            <h1 className="font-headline-lg text-6xl md:text-8xl uppercase leading-tight mb-6">
+            <h1 className="font-headline-lg text-4xl sm:text-6xl md:text-8xl uppercase leading-tight mb-6">
+
               {/* Bagian Biru + Glow */}
               <span className="block text-[#00bfff] [text-shadow:0_0_25px_rgba(0,191,255,0.6)]">
                 TECH ENTHUSIAST
@@ -220,6 +221,7 @@ function Home() {
               </span>
             </h1>
             <p className="font-body-lg text-on-surface-variant max-w-xl mb-12 mx-auto lg:mx-0">
+
               Mahasiswa Teknik Informatika semester 6 dengan fokus riset pada Artificial Intelligence, Computer Vision, dan NLP. Memadukan kecerdasan buatan dengan pengembangan web modern.
             </p>
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6">
