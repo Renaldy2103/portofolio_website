@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@layer base {
+    body {
+        background-color: #050505;
+        color: #e3e2e8;
+        overflow-x: hidden;
+    }
+}
+
+@layer utilities {
+    .glow-cyan {
+        box-shadow: 0 0 40px rgba(0, 163, 255, 0.4);
+    }
+    .bloom-bg {
+        position: absolute;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(circle, rgba(0, 163, 255, 0.12) 0%, rgba(0, 163, 255, 0) 70%);
+        z-index: -1;
+        filter: blur(60px);
+    }
+    .glass-card {
+        background: rgba(18, 19, 23, 0.7);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .card-glow:hover {
+        box-shadow: 0 0 30px rgba(0, 163, 255, 0.15);
+        border-color: rgba(0, 163, 255, 0.4);
+    }
+    .cyber-text-glow {
+        text-shadow: 0 0 15px rgba(0, 163, 255, 0.6);
+    }
+    .scroll-reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .scroll-reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    html {
+        scroll-behavior: smooth;
+      }
+}
