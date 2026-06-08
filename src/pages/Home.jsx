@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { FaGithub } from "react-icons/fa";
 import emailjs from '@emailjs/browser';
+import LogoLoop from "../components/LogoLoop";
+import Aurora from "../components/Aurora";
+import CoolProfileCard from "../components/CoolProfileCard";
+import JourneyTimeline from "../components/JourneyTimeline";
 import fotoProfil from "../assets/PhotoProfile.jpeg";
+
 
 function Home() {
   const projects = [
@@ -179,22 +184,50 @@ function Home() {
   // 5. EFFECTS (Scroll Animation Observer)
   // ==========================================
   useEffect(() => {
-    const reveals = document.querySelectorAll('.scroll-reveal-target');
-    const observer = new IntersectionObserver((entries) => {
+    // Only observe parent sections, not nested animated children
+    const sections = document.querySelectorAll('section[id].scroll-reveal-target');
+    const childAnimatables = document.querySelectorAll('.scroll-reveal-target:not(section[id])');
+
+    const sectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
+                // Also add active to nested animated children
+                entry.target.querySelectorAll('.scroll-reveal-target').forEach(child => {
+                    child.classList.add('active');
+                });
+            } else {
+                entry.target.classList.remove('active');
+                entry.target.querySelectorAll('.scroll-reveal-target').forEach(child => {
+                    child.classList.remove('active');
+                });
+            }
+        });
+    }, { threshold: 0.15 });
+
+    const childObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            } else {
+                entry.target.classList.remove('active');
             }
         });
     }, { threshold: 0.1 });
 
-    reveals.forEach(reveal => {
-        reveal.classList.add('scroll-reveal');
-        observer.observe(reveal);
+    sections.forEach(section => {
+        section.classList.add('scroll-reveal');
+        sectionObserver.observe(section);
+    });
+
+    childAnimatables.forEach(child => {
+        child.classList.add('scroll-reveal');
+        childObserver.observe(child);
     });
 
     return () => {
-      reveals.forEach(reveal => observer.unobserve(reveal));
+      sections.forEach(section => sectionObserver.unobserve(section));
+      childAnimatables.forEach(child => childObserver.unobserve(child));
     };
   }, []);
 
@@ -204,171 +237,90 @@ function Home() {
       <div className="bloom-bg top-[-200px] right-[-100px]"></div>
       <div className="bloom-bg bottom-[-200px] left-[-200px]"></div>
 
+      {/* Aurora Effect */}
+      <div className="fixed inset-0 pointer-events-none -z-10">
+        <Aurora
+          colorStops={["#3B82F6","#ffffff","#f0ff27"]}
+          blend={0.5}
+          amplitude={1.0}
+          speed={1}
+        />
+      </div>
+
       <main className="max-w-10xl mx-auto px-6 md:px-12 lg:px-16 pt-32 md:pt-40">
         {/* Hero Section */}
         <section className="flex flex-col lg:flex-row items-center justify-between gap-16 min-h-[75vh] mb-40 relative scroll-reveal-target" id="home">
           <div className="flex-1 order-2 lg:order-1 text-center lg:text-left">
-            <p className="text-primary font-label-caps tracking-[0.3em] mb-6 uppercase">Halo, Saya Moch Renaldy Syaputra</p>
-            <h1 className="font-headline-lg text-4xl sm:text-6xl md:text-8xl uppercase leading-tight mb-6">
+            <p className="text-primary font-label-caps tracking-[0.3em] mb-6 uppercase fade-in delay-100 scroll-reveal-target">Halo, Saya Moch Renaldy Syaputra</p>
+            <h1 className="font-headline-lg text-3xl sm:text-4xl md:text-5xl lg:text-6xl uppercase leading-tight mb-6">
 
               {/* Bagian Biru + Glow */}
-              <span className="block text-[#00bfff] [text-shadow:0_0_25px_rgba(0,191,255,0.6)]">
+              <span className="block text-[#00bfff] [text-shadow:0_0_25px_rgba(0,191,255,0.6)] slide-left delay-200 scroll-reveal-target">
                 TECH ENTHUSIAST
               </span>
               {/* Bagian Putih */}
-              <span className="block text-white mt-1">
+              <span className="block text-white mt-1 slide-left delay-300 scroll-reveal-target">
                 & AI EXPLORER
               </span>
             </h1>
-            <p className="font-body-lg text-on-surface-variant max-w-xl mb-12 mx-auto lg:mx-0">
+            <p className="font-body-lg text-on-surface-variant max-w-xl mb-12 mx-auto lg:mx-0 fade-in delay-400 scroll-reveal-target">
 
               Mahasiswa Teknik Informatika semester 6 dengan fokus riset pada Artificial Intelligence, Computer Vision, dan NLP. Memadukan kecerdasan buatan dengan pengembangan web modern.
             </p>
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6">
-            <a className="bg-[#C1E3FC] text-[#2C3E50] px-[36px] py-[23px] rounded-full font-bold uppercase tracking-wide inline-block" href="#projects"> LIHAT PROYEK </a>
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 fade-in delay-500 scroll-reveal-target">
+            <a className="bg-[#C1E3FC] text-[#2C3E50] px-[36px] py-[23px] rounded-full font-bold uppercase tracking-wide inline-block hover:scale-105 transition-transform" href="#projects"> LIHAT PROYEK </a>
             <a className="border border-primary/40 text-primary px-10 py-5 rounded-full font-bold hover:bg-primary/10 transition-all transform hover:-translate-y-1 flex items-center gap-2" href="/cv-renaldy.pdf" download="CV_Moch_Renaldy_Syaputra.pdf"> <span className="material-symbols-outlined">download</span> UNDUH CV</a>
             </div>
           </div>
           <div className="flex-1 order-1 lg:order-2 relative group">
-            <div className="relative w-full max-w-[500px] mx-auto aspect-[4/5] overflow-hidden rounded-[40px] border border-white/10 shadow-2xl transition-all duration-700 group-hover:border-primary/50">
-              <img alt="Moch Renaldy Syaputra" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100" src={fotoProfil} />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-            </div>
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 blur-[80px] -z-10 animate-pulse"></div>
-            <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-primary-container/10 blur-[100px] -z-10"></div>
+            <CoolProfileCard photoProfil={fotoProfil} />
           </div>
         </section>
 
-        {/* About & Tech Stack Section */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-40 scroll-reveal-target" id="about">
-          {/* About Card */}
-          <div className="lg:col-span-7 glass-card rounded-[40px] p-12 flex flex-col justify-between">
-            <div>
-                <div className="flex items-center gap-4">
-                {/* Garis Horizontal */}
-                <div className="h-[2px] w-8 bg-[#86a8c3]"></div>
-                {/* Teks */}
-                <span className="text-[#86a8c3] font-bold text-sm uppercase tracking-widest">
-                  INTRODUCTION
-                </span>
-              </div>
-              <h2 className="font-display text-4xl md:text-5xl text-white mb-4 mt-4 tracking-wide">About Me</h2>
-              <p className="font-body-lg text-on-surface-variant leading-relaxed mb-8 text-xl">
-                I am a <span className="text-white font-bold">6th-semester Computer Science student</span> currently exploring the vast domains of <span className="text-primary">Machine Learning, Computer Vision, and Natural Language Processing (NLP)</span>.
-              </p>
-              <p className="font-body-lg text-on-surface-variant leading-relaxed">
-                My motivation lies in building efficient AI solutions and integrating them with interactive, user-friendly web interfaces. I thrive on solving complex problems at the intersection of intelligence and design, aiming to create impactful digital experiences.
-              </p>
+        {/* About Section */}
+        <section className="mb-24 scroll-reveal-target" id="about">
+          <div className="glass-card rounded-[20px] sm:rounded-[30px] md:rounded-[40px] p-6 sm:p-8 md:p-12">
+            <div className="flex items-center gap-4 mb-8 slide-left scroll-reveal-target">
+              <div className="h-[2px] w-8 bg-[#86a8c3]"></div>
+              <span className="text-[#86a8c3] font-bold text-sm uppercase tracking-widest">INTRODUCTION</span>
             </div>
-            <div className="mt-16 grid grid-cols-2 gap-10 border-t border-white/10 pt-10">
-              <div className="flex flex-col">
-                <span className="text-primary font-headline-lg text-[40px] cyber-text-glow">6th</span>
-                <span className="text-label-caps text-on-surface-variant uppercase mt-1">Semester Student</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-primary font-headline-lg text-[40px] cyber-text-glow">AI</span>
-                <span className="text-label-caps text-on-surface-variant uppercase mt-1">Focused Research</span>
-              </div>
-            </div>
-          </div>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-white mb-6 tracking-wide slide-left delay-100 scroll-reveal-target">About Me</h2>
 
-          {/* Tech Stack & Tools */}
-          <div className="lg:col-span-5 flex flex-col gap-gutter">
-            <div className="glass-card rounded-[40px] p-10 flex-1">
-            <div className="flex items-center gap-4">
-                {/* Garis Horizontal */}
-                <div className="h-[2px] w-8 bg-[#86a8c3]"></div>
-                {/* Teks */}
-                <span className="text-[#86a8c3] font-bold text-sm uppercase tracking-widest">
-                  TECH STACK
-                </span>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+              <div>
+                <p className="font-body-lg text-on-surface-variant leading-relaxed mb-6 text-base sm:text-lg md:text-xl fade-in delay-200 scroll-reveal-target">
+                  I am a <span className="text-white font-bold">6th-semester Computer Science student</span> currently exploring the vast domains of <span className="text-primary">Machine Learning, Computer Vision, and Natural Language Processing (NLP)</span>.
+                </p>
+                <p className="font-body-lg text-on-surface-variant leading-relaxed fade-in delay-300 scroll-reveal-target">
+                  My motivation lies in building efficient AI solutions and integrating them with interactive, user-friendly web interfaces. I thrive on solving complex problems at the intersection of intelligence and design, aiming to create impactful digital experiences.
+                </p>
               </div>
-              <div className="space-y-10">
-                {/* Languages */}
-                <div>
-                  <h4 className="text-white font-bold mb-6 flex items-center gap-2 text-sm uppercase tracking-wider">
-                    <span className="material-symbols-outlined text-primary text-xl">code</span> Languages &amp; Frameworks
-                  </h4>
-                  <div className="flex flex-wrap gap-3">
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="Python" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg"/> Python
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="Next.js" className="w-6 h-6 object-contain" src="https://cdn.simpleicons.org/nextdotjs/white"/> Next.js
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="React" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg"/> React
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="Tailwind" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg"/> Tailwind
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="HTML" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg"/> HTML
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="CSS" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg"/> CSS
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="Bootstrap" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg"/> Bootstrap
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="PHP" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg"/> PHP
-                    </span>
+
+              <div className="grid grid-cols-2 gap-4 sm:gap-6">
+                <div className="glass-card rounded-2xl p-4 sm:p-6 flex flex-col items-center text-center">
+                  <span className="text-primary font-headline-lg text-3xl sm:text-4xl cyber-text-glow">6th</span>
+                  <span className="text-label-caps text-on-surface-variant uppercase mt-2 text-xs sm:text-sm">Semester Student</span>
+                </div>
+                <div className="glass-card rounded-2xl p-4 sm:p-6 flex flex-col items-center text-center">
+                  <span className="text-primary font-headline-lg text-3xl sm:text-4xl cyber-text-glow">AI</span>
+                  <span className="text-label-caps text-on-surface-variant uppercase mt-2 text-xs sm:text-sm">Focused Research</span>
+                </div>
+                <div className="glass-card rounded-2xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4">
+                  <span className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-white/10 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-[#00bfff] text-lg sm:text-xl">psychology</span>
+                  </span>
+                  <div>
+                    <p className="text-primary font-label-caps text-xs uppercase tracking-widest">Focus</p>
+                    <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">Real-time vision & AI</p>
                   </div>
                 </div>
-
-                {/* Tools */}
-                <div>
-                  <h4 className="text-white font-bold mb-6 flex items-center gap-2 text-sm uppercase tracking-wider">
-                    <span className="material-symbols-outlined text-primary text-xl">build</span> Advanced Tools
-                  </h4>
-                  <div className="flex flex-wrap gap-3">
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="Git" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg"/> Git
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="Colab" className="w-6 h-6 object-contain" src="https://cdn.simpleicons.org/googlecolab/white"/> Google Colab
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="Roboflow" className="w-6 h-6 object-contain" src="https://cdn.simpleicons.org/roboflow/white"/> Roboflow
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="Gemini" className="w-6 h-6 object-contain" src="https://cdn.simpleicons.org/googlegemini/white"/> Gemini
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="Gamma" className="w-6 h-6 object-contain" src="https://api.iconify.design/material-symbols/gamma-rounded.svg?color=white" /> Gamma
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img 
-                        alt="Stitch" 
-                        className="w-6 h-6 object-contain" 
-                        src="https://api.iconify.design/ph/git-merge-bold.svg?color=white" 
-                      /> 
-                      Stitch
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img 
-                        alt="Anti Gravity" 
-                        className="w-7 h-7 object-contain" 
-                        src="https://api.iconify.design/lucide/rocket.svg?color=white" 
-                      /> 
-                      Anti Gravity
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="Claude" className="w-6 h-6 object-contain" src="https://cdn.simpleicons.org/anthropic/white"/> Claude
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="Docker" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg"/> Docker
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="XAMPP" className="w-6 h-6 object-contain" src="https://cdn.simpleicons.org/xampp/white"/> XAMPP
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="VS Studio" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg"/> VS Code
-                    </span>
-                    <span className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-body-sm text-on-surface flex items-center gap-3 hover:bg-white/10 transition-colors">
-                      <img alt="Figma" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg"/> Figma
-                    </span>
+                <div className="glass-card rounded-2xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4">
+                  <span className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-white/10 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-[#00bfff] text-lg sm:text-xl">build</span>
+                  </span>
+                  <div>
+                    <p className="text-primary font-label-caps text-xs uppercase tracking-widest">Tools</p>
+                    <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">Python, OpenCV, Web</p>
                   </div>
                 </div>
               </div>
@@ -376,52 +328,43 @@ function Home() {
           </div>
         </section>
 
-        {/* Experience Section */}
-        <section className="mb-40 px-6 md:px-12 lg:px-16 scroll-reveal-target" id="experience">
-        <div className="flex items-center justify-between mb-16 gap-6">
-            {/* Bagian Judul dan Garis */}
-            <div className="flex items-center gap-6 md:gap-8 flex-1">
-              <h2 className="font-display text-4xl md:text-5xl uppercase text-white whitespace-nowrap tracking-wide [text-shadow:-1.5px_0_#00bfff,1.5px_0_#ff4500]">
-                Experience &amp; Leadership
-              </h2>
-              <div className="h-[1px] w-full bg-white/10"></div>
-            </div>
-            <div className="hidden sm:flex gap-4">
-            <button className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:border-white/30 hover:bg-white/5 transition-all text-[#00bfff]">
-              <span className="material-symbols-outlined">arrow_back</span>
-            </button>
-            <button className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:border-white/30 hover:bg-white/5 transition-all text-[#00bfff]">
-              <span className="material-symbols-outlined">arrow_forward</span>
-            </button>
+        {/* Tech Stack Section */}
+        <section className="mb-40 scroll-reveal-target" id="tech-stack">
+          <div className="flex items-center gap-4 mb-8 slide-left scroll-reveal-target">
+            <div className="h-[2px] w-8 bg-[#86a8c3]"></div>
+            <span className="text-[#86a8c3] font-bold text-sm uppercase tracking-widest">TECH STACK</span>
           </div>
-        </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="glass-card rounded-[32px] p-10 hover:border-primary/40 transition-all group relative overflow-hidden">
-              <div className="absolute -right-6 -top-6 text-[100px] text-white/5 font-display-xl opacity-0 group-hover:opacity-100 transition-opacity">01</div>
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-8">
-                <span className="material-symbols-outlined text-3xl text-primary">groups</span>
-              </div>
-              <h3 className="font-title-md text-white mb-3">Division PDD (Community Service)</h3>
-              <p className="text-primary font-label-caps mb-6 tracking-widest">Publikasi, Dekorasi, Dokumentasi</p>
-              <p className="text-on-surface-variant text-body-lg leading-relaxed">
-                Actively participated in community service initiatives, managing visual communication and event documentation. Ensured consistent branding and impactful media coverage for local social impact projects.
-              </p>
-            </div>
-            
-            <div className="glass-card rounded-[32px] p-10 hover:border-primary/40 transition-all group relative overflow-hidden">
-              <div className="absolute -right-6 -top-6 text-[100px] text-white/5 font-display-xl opacity-0 group-hover:opacity-100 transition-opacity">02</div>
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-8">
-                <span className="material-symbols-outlined text-3xl text-primary">rocket_launch</span>
-              </div>
-              <h3 className="font-title-md text-white mb-3">Internship</h3>
-              <p className="text-primary font-label-caps mb-6 tracking-widest">Ezy Industries, Malang</p>
-              <p className="text-on-surface-variant text-body-lg leading-relaxed">
-              Developed and maintained dynamic, responsive web applications at Ezy Industries using HTML and PHP to support operational requirements. Core responsibilities included optimizing existing codebases for seamless cross-browser functionality, writing clean and well-documented code for smooth project handovers, and proactively exploring modern frameworks such as Laravel and Vue.js. The internship program was successfully completed with an 'A' (Excellent) final evaluation grade.
-              </p>
-            </div>
-          </div>
+
+          <LogoLoop
+            logos={[
+              { node: <img alt="React" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" />, title: 'React' },
+              { node: <img alt="Next.js" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.simpleicons.org/nextdotjs/white" />, title: 'Next.js' },
+              { node: <img alt="Tailwind" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" />, title: 'Tailwind CSS' },
+              { node: <img alt="TypeScript" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.simpleicons.org/typescript/white" />, title: 'TypeScript' },
+              { node: <img alt="Python" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" />, title: 'Python' },
+              { node: <img alt="PHP" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg" />, title: 'PHP' },
+              { node: <img alt="JavaScript" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" />, title: 'JavaScript' },
+              { node: <img alt="MySQL" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.simpleicons.org/mysql/white" />, title: 'MySQL' },
+              { node: <img alt="C++" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.simpleicons.org/cplusplus/white" />, title: 'C++' },
+              { node: <img alt="Docker" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" />, title: 'Docker' },
+              { node: <img alt="Git" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" />, title: 'Git' },
+              { node: <img alt="VS Code" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg" />, title: 'VS Code' },
+              { node: <img alt="Google Colab" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.simpleicons.org/googlecolab/white" />, title: 'Google Colab' },
+              { node: <img alt="Roboflow" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.simpleicons.org/roboflow/white" />, title: 'Roboflow' },
+              { node: <img alt="Gemini" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.simpleicons.org/googlegemini/white" />, title: 'Gemini' },
+              { node: <img alt="Claude" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.simpleicons.org/anthropic/white" />, title: 'Claude' },
+              { node: <img alt="React Native" className="h-14 w-auto shrink-0 max-w-none object-contain" src="https://cdn.simpleicons.org/react/white" />, title: 'React' },
+            ]}
+            speed={90}
+            direction="left"
+            logoHeight={64}
+            gap={64}
+            hoverSpeed={0}
+            ariaLabel="Tech stack logos"
+          />
         </section>
+
+        <JourneyTimeline />
 
 {/* My Work Section */}
 <section
@@ -438,7 +381,7 @@ function Home() {
             </span>
           </div>
 
-          <h2 className="font-display text-4xl md:text-5xl uppercase text-white tracking-wide [text-shadow:-1.5px_0_#00bfff,1.5px_0_#ff4500]">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl uppercase text-white tracking-wide [text-shadow:-1.5px_0_#00bfff,1.5px_0_#ff4500]">
             My Work
           </h2>
         </div>
@@ -512,23 +455,23 @@ function Home() {
                       </div>
                     </div>
 
-                    <div className="p-10">
-                      <div className="flex justify-between items-start mb-6">
-                        <h3 className="font-title-md text-2xl text-white group-hover:text-primary transition-colors">
+                    <div className="p-6 sm:p-10">
+                      <div className="flex flex-col sm:flex-row justify-between items-start gap-2 mb-4 sm:mb-6">
+                        <h3 className="font-title-md text-xl sm:text-2xl text-white group-hover:text-primary transition-colors">
                           {project.title}
                         </h3>
 
-                        <span className="bg-primary-container/20 text-primary-container px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest border border-primary/20">
+                        <span className="bg-primary-container/20 text-primary-container px-3 py-1 sm:px-4 sm:py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest border border-primary/20 whitespace-nowrap">
                           {project.category}
                         </span>
                       </div>
 
-                      <p className="font-body-sm text-on-surface-variant mb-8 text-base line-clamp-2">
+                      <p className="font-body-sm text-on-surface-variant mb-6 sm:mb-8 text-sm sm:text-base line-clamp-2">
                         {project.description}
                       </p>
 
-                      <div className="flex justify-between items-center">
-                        <div className="flex flex-wrap gap-4">
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div className="flex flex-wrap gap-2 sm:gap-4">
                           {project.tech.map((item) => (
                             <span
                               key={item}
@@ -545,7 +488,7 @@ function Home() {
                             href={project.github}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-white hover:text-[#00bfff] transition"
+                            className="text-white hover:text-[#00bfff] transition mt-2 sm:mt-0"
                           >
                             <FaGithub size={24} />
                           </a>
@@ -562,18 +505,18 @@ function Home() {
 
 {/* SECTION SERTIFIKAT & PENCAPAIAN */}
 {/* ========================================================= */}
-<section className="mb-40 scroll-reveal-target relative" id="certificates">
-  
+<section className="mb-40 scroll-reveal-target relative px-4 sm:px-0" id="certificates">
+
   {/* Header Container: Menggunakan flex untuk membagi judul (kiri) dan tombol (kanan) */}
   <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-6 relative">
-    
+
     {/* Sisi Kiri: Judul & Teks Deskripsi */}
     <div className="text-left">
       <div className="flex items-center gap-4 mb-4">
         <span className="text-[#86a8c3] font-bold text-sm uppercase tracking-widest">Validations</span>
         <div className="h-[2px] w-8 bg-[#86a8c3]"></div>
       </div>
-      <h2 className="font-display text-[40px] md:text-[54px] uppercase tracking-wide leading-tight mb-4">
+      <h2 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[54px] uppercase tracking-wide leading-tight mb-4">
         <span className="text-white">SERTIFIKAT & </span>
         <span className="text-[#00bfff]">PENCAPAIAN</span>
       </h2>
@@ -584,8 +527,8 @@ function Home() {
 
     {/* Sisi Kanan Atas: Tombol Navigasi Minimalis (Tanpa Tulisan Teks) */}
     <div className="flex gap-3 self-end md:self-auto">
-      <button 
-        onClick={() => scroll('left')} 
+      <button
+        onClick={() => scroll('left')}
         className="w-12 h-12 rounded-xl bg-[#1a1a1a] border border-white/10 text-white flex items-center justify-center hover:bg-[#252525] hover:border-white/20 active:scale-95 transition-all group"
         aria-label="Scroll Left"
       >
@@ -593,8 +536,8 @@ function Home() {
           arrow_back
         </span>
       </button>
-      <button 
-        onClick={() => scroll('right')} 
+      <button
+        onClick={() => scroll('right')}
         className="w-12 h-12 rounded-xl bg-[#1a1a1a] border border-white/10 text-white flex items-center justify-center hover:bg-[#252525] hover:border-white/20 active:scale-95 transition-all group"
         aria-label="Scroll Right"
       >
@@ -607,29 +550,29 @@ function Home() {
   </div>
 
   {/* Kontainer Slider Sertifikat */}
-  <div 
-    ref={certificateContainerRef} 
-    className="flex flex-nowrap overflow-x-auto gap-6 pb-6 scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+  <div
+    ref={certificateContainerRef}
+    className="flex overflow-x-auto gap-4 sm:gap-6 pb-6 scroll-smooth snap-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
   >
     {certificatesData.map((cert) => (
-      <div 
-        key={cert.id} 
-        className="min-w-[100%] sm:min-w-[48%] lg:min-w-[31.33%] bg-[#1a1a1a] p-5 rounded-2xl border border-white/5 flex flex-col justify-between"
+      <div
+        key={cert.id}
+        className="flex-none w-[85%] sm:w-[48%] lg:w-[31%] snap-start bg-[#1a1a1a] p-4 sm:p-5 rounded-2xl border border-white/5 flex flex-col justify-between"
       >
         <div>
-          <img 
-            src={cert.image} 
-            alt={cert.title} 
-            className="w-full aspect-[4/3] object-cover rounded-xl mb-4 bg-black/20" 
+          <img
+            src={cert.image}
+            alt={cert.title}
+            className="w-full aspect-[4/3] object-cover rounded-xl mb-3 sm:mb-4 bg-black/20"
           />
-          <span className="text-[10px] text-[#00bfff] font-bold tracking-widest uppercase block mb-2">
+          <span className="text-[10px] sm:text-xs text-[#00bfff] font-bold tracking-widest uppercase block mb-2">
             {cert.category}
           </span>
-          <h3 className="text-white font-bold text-base md:text-lg leading-snug line-clamp-2">
+          <h3 className="text-white font-bold text-sm sm:text-base md:text-lg leading-snug line-clamp-2">
             {cert.title}
           </h3>
         </div>
-        <div className="mt-4 pt-4 border-t border-white/5 flex justify-between items-center text-gray-400 text-xs">
+        <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/5 flex justify-between items-center text-gray-400 text-xs">
           <span className="truncate max-w-[70%]">{cert.issuer}</span>
           <span className="font-mono">{cert.date}</span>
         </div>
@@ -640,44 +583,44 @@ function Home() {
 </section>
 
         {/* Get In Touch Section */}
-    <section className="mb-40 px-6 md:px-12 lg:px-16 scroll-reveal-target" id="contact">
-      <div className="bg-[#0f0f0f] border border-white/5 rounded-[48px] p-8 md:p-12 lg:p-16 relative overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#00bfff]/10 blur-[120px] -z-10 rounded-full"></div>
+    <section className="mb-40 px-4 sm:px-6 md:px-12 lg:px-16 scroll-reveal-target" id="contact">
+      <div className="bg-[#0f0f0f] border border-white/5 rounded-[24px] sm:rounded-[32px] md:rounded-[48px] p-6 sm:p-8 md:p-12 lg:p-16 relative overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] bg-[#00bfff]/10 blur-[80px] sm:blur-[100px] md:blur-[120px] -z-10 rounded-full"></div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20">
-          
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-12 md:gap-16 lg:gap-20">
+
           {/* --- BAGIAN KIRI (Teks & Info) --- */}
           <div>
             <div className="flex items-center gap-4 mb-6">
               <div className="h-[2px] w-8 bg-[#86a8c3]"></div>
               <span className="text-[#86a8c3] font-bold text-sm uppercase tracking-widest">Connect</span>
             </div>
-            <h2 className="font-display text-5xl md:text-6xl lg:text-7xl uppercase text-white leading-[0.9] mb-8 tracking-wide">
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl uppercase text-white leading-[0.9] mb-4 sm:mb-6 md:mb-8 tracking-wide">
               LET'S BUILD <br/>
               SOMETHING <br/>
               <span className="text-[#00bfff] [text-shadow:0_0_25px_rgba(0,191,255,0.8)]">SMART</span> TOGETHER
             </h2>
-            <p className="text-gray-300 text-lg md:text-xl mb-12 max-w-md">
+            <p className="text-gray-300 text-base sm:text-lg md:text-xl mb-8 sm:mb-12 max-w-md">
               Saya terbuka untuk kolaborasi proyek AI, Web Development, atau riset data science. Hubungi saya sekarang.
             </p>
 
-            <div className="space-y-8">
-              <div className="flex items-center gap-6 group">
-                <div className="w-14 h-14 rounded-2xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center group-hover:border-[#00bfff]/50 transition-all">
+            <div className="space-y-6 sm:space-y-8">
+              <div className="flex items-center gap-4 sm:gap-6 group">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center group-hover:border-[#00bfff]/50 transition-all">
                   <span className="material-symbols-outlined text-[#86a8c3]">mail</span>
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Email Me</p>
-                  <p className="text-white font-bold text-base md:text-lg">renaldy.syaputra2103@gmail.com</p>
+                  <p className="text-white font-bold text-sm sm:text-base md:text-lg">renaldy.syaputra2103@gmail.com</p>
                 </div>
               </div>
-              <div className="flex items-center gap-6 group">
-                <div className="w-14 h-14 rounded-2xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center group-hover:border-[#00bfff]/50 transition-all">
+              <div className="flex items-center gap-4 sm:gap-6 group">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center group-hover:border-[#00bfff]/50 transition-all">
                   <span className="material-symbols-outlined text-[#86a8c3]">location_on</span>
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Location</p>
-                  <p className="text-white font-bold text-base md:text-lg">Malang, Indonesia</p>
+                  <p className="text-white font-bold text-sm sm:text-base md:text-lg">Malang, Indonesia</p>
                 </div>
               </div>
             </div>
@@ -685,36 +628,36 @@ function Home() {
 
           {/* --- BAGIAN KANAN (Formulir Terhubung EmailJS) --- */}
           {/* Tambahkan ref dan onSubmit di sini */}
-          <form ref={form} onSubmit={sendEmail} className="space-y-6 flex flex-col justify-center">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form ref={form} onSubmit={sendEmail} className="space-y-4 sm:space-y-6 flex flex-col justify-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Nama Lengkap</label>
                 {/* Atribut name="name" ditambahkan */}
-                <input name="name" required className="w-full bg-[#1a1a1a] border border-white/5 rounded-2xl px-6 py-4 text-white focus:border-[#00bfff] focus:ring-0 outline-none transition-all placeholder:text-gray-600" placeholder="John Doe" type="text"/>
+                <input name="name" required className="w-full bg-[#1a1a1a] border border-white/5 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-white focus:border-[#00bfff] focus:ring-0 outline-none transition-all placeholder:text-gray-600" placeholder="Nama Anda" type="text"/>
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Alamat Email</label>
                 {/* Atribut name="email" ditambahkan */}
-                <input name="email" required className="w-full bg-[#1a1a1a] border border-white/5 rounded-2xl px-6 py-4 text-white focus:border-[#00bfff] focus:ring-0 outline-none transition-all placeholder:text-gray-600" placeholder="john@example.com" type="email"/>
+                <input name="email" required className="w-full bg-[#1a1a1a] border border-white/5 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-white focus:border-[#00bfff] focus:ring-0 outline-none transition-all placeholder:text-gray-600" placeholder="email@example.com" type="email"/>
               </div>
             </div>
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Topik Pesan</label>
               {/* Atribut name="title" ditambahkan */}
-              <input name="title" required className="w-full bg-[#1a1a1a] border border-white/5 rounded-2xl px-6 py-4 text-white focus:border-[#00bfff] focus:ring-0 outline-none transition-all placeholder:text-gray-600" placeholder="Web Development / AI Research" type="text"/>
+              <input name="title" required className="w-full bg-[#1a1a1a] border border-white/5 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-white focus:border-[#00bfff] focus:ring-0 outline-none transition-all placeholder:text-gray-600" placeholder="Web Development / AI Research" type="text"/>
             </div>
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Detail Pesan</label>
               {/* Atribut name="message" ditambahkan */}
-              <textarea name="message" required className="w-full bg-[#1a1a1a] border border-white/5 rounded-2xl px-6 py-4 text-white focus:border-[#00bfff] focus:ring-0 outline-none transition-all placeholder:text-gray-600 min-h-[160px] resize-y" placeholder="Bagaimana saya bisa membantu Anda?"></textarea>
+              <textarea name="message" required className="w-full bg-[#1a1a1a] border border-white/5 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-white focus:border-[#00bfff] focus:ring-0 outline-none transition-all placeholder:text-gray-600 min-h-[120px] sm:min-h-[160px] resize-y" placeholder="Bagaimana saya bisa membantu Anda?"></textarea>
             </div>
-            
+
             {/* Tombol Kirim Dinamis */}
-            <button 
+            <button
               disabled={isSubmitting}
-              className={`w-full font-bold py-4 rounded-xl transition-all mt-2 text-base uppercase tracking-wide flex justify-center items-center gap-2
+              className={`w-full font-bold py-3 sm:py-4 rounded-xl transition-all mt-2 text-sm sm:text-base uppercase tracking-wide flex justify-center items-center gap-2
                 ${isSubmitting ? 'bg-gray-500 text-gray-300 cursor-not-allowed' : 'bg-[#9bd2fd] text-[#1a2b3c] hover:shadow-[0_0_25px_rgba(155,210,253,0.3)]'}
-              `} 
+              `}
               type="submit"
             >
               {isSubmitting ? 'MENGIRIM PESAN...' : 'KIRIM PESAN SEKARANG'}

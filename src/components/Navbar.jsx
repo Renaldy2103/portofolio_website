@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import './Navbar.css';
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -47,19 +48,19 @@ function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-8xl rounded-full backdrop-blur-2xl border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.8)] flex justify-between items-center px-4 sm:px-6 md:px-10 py-3 z-50 transition-colors duration-300 ${isScrolled ? 'bg-[#111111]/95' : 'bg-[#111111]/80'}`}
+        className={`fixed top-0 left-0 right-0 w-full backdrop-blur-2xl border-t border-b border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)] flex justify-between items-center px-4 sm:px-6 md:px-10 py-3 z-50 transition-colors duration-300 ${isScrolled ? 'bg-[#111111]/60' : 'bg-[#111111]/40'}`}
       >
         {/* 1. Bagian Logo */}
         <Link
           to="/"
           onClick={() => window.scrollTo(0, 0)}
-          className="font-display text-2xl md:text-3xl text-[#00bfff] [text-shadow:0_0_15px_rgba(0,191,255,0.6)] uppercase tracking-wide"
+          className="font-['Syne'] text-2xl md:text-3xl bg-gradient-to-r from-[#00bfff] via-white to-[#00bfff] bg-clip-text text-transparent hover:opacity-80 transition-opacity uppercase tracking-wider"
         >
-          MOCH RENALDY Syaputra
+          Moch Renaldy Syaputra
         </Link>
 
         {/* 2. Bagian Menu Navigasi (Desktop) */}
-        <div className="hidden lg:flex items-center gap-10 text-xs md:text-sm font-bold tracking-widest uppercase">
+        <div className="hidden lg:flex items-center gap-8 text-sm">
           {/* Menu HOME */}
           {isHome ? (
             <a
@@ -68,17 +69,19 @@ function Navbar() {
                 e.preventDefault();
                 window.scrollTo(0, 0);
               }}
-              className={`transition-colors ${
+              className={`relative group nav-link ${
                 activeSection === 'home'
-                  ? 'text-white border-b-2 border-[#00bfff] pb-1'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'text-white'
+                  : 'text-gray-400'
               }`}
             >
-              HOME
+              <span className="relative z-10">Home</span>
+              <span className={`absolute bottom-0 left-0 w-full h-[2px] bg-[#00bfff] transition-all duration-300 ${activeSection === 'home' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
             </a>
           ) : (
-            <Link to="/" className="text-gray-400 hover:text-white transition-colors">
-              HOME
+            <Link to="/" className="text-gray-400 hover:text-white transition-colors relative group nav-link">
+              <span className="relative z-10">Home</span>
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#00bfff] scale-x-0 group-hover:scale-x-100 transition-all duration-300"></span>
             </Link>
           )}
 
@@ -86,27 +89,29 @@ function Navbar() {
           {isHome && (
             <a
               href="#about"
-              className={`transition-colors ${
+              className={`relative group nav-link ${
                 activeSection === 'about'
-                  ? 'text-white border-b-2 border-[#00bfff] pb-1'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'text-white'
+                  : 'text-gray-400'
               }`}
             >
-              ABOUT
+              <span className="relative z-10">About</span>
+              <span className={`absolute bottom-0 left-0 w-full h-[2px] bg-[#00bfff] transition-all duration-300 ${activeSection === 'about' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
             </a>
           )}
 
-          {/* Menu EXPERIENCE */}
+          {/* Menu JOURNEY */}
           {isHome && (
             <a
-              href="#experience"
-              className={`transition-colors ${
-                activeSection === 'experience'
-                  ? 'text-white border-b-2 border-[#00bfff] pb-1'
-                  : 'text-gray-400 hover:text-white'
+              href="#journey"
+              className={`relative group nav-link ${
+                activeSection === 'journey'
+                  ? 'text-white'
+                  : 'text-gray-400'
               }`}
             >
-              EXPERIENCE
+              <span className="relative z-10">Experience</span>
+              <span className={`absolute bottom-0 left-0 w-full h-[2px] bg-[#00bfff] transition-all duration-300 ${activeSection === 'journey' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
             </a>
           )}
 
@@ -114,13 +119,14 @@ function Navbar() {
           {isHome && (
             <a
               href="#projects"
-              className={`transition-colors ${
+              className={`relative group nav-link ${
                 activeSection === 'projects'
-                  ? 'text-white border-b-2 border-[#00bfff] pb-1'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'text-white'
+                  : 'text-gray-400'
               }`}
             >
-              PROJECTS
+              <span className="relative z-10">Projects</span>
+              <span className={`absolute bottom-0 left-0 w-full h-[2px] bg-[#00bfff] transition-all duration-300 ${activeSection === 'projects' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
             </a>
           )}
 
@@ -128,13 +134,14 @@ function Navbar() {
           {isHome && (
             <a
               href="#certificates"
-              className={`transition-colors ${
+              className={`relative group nav-link ${
                 activeSection === 'certificates'
-                  ? 'text-white border-b-2 border-[#00bfff] pb-1'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'text-white'
+                  : 'text-gray-400'
               }`}
             >
-              CERTIFICATES
+              <span className="relative z-10">Certificates</span>
+              <span className={`absolute bottom-0 left-0 w-full h-[2px] bg-[#00bfff] transition-all duration-300 ${activeSection === 'certificates' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
             </a>
           )}
 
@@ -142,13 +149,14 @@ function Navbar() {
           {isHome && (
             <a
               href="#contact"
-              className={`transition-colors ${
+              className={`relative group nav-link ${
                 activeSection === 'contact'
-                  ? 'text-white border-b-2 border-[#00bfff] pb-1'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'text-white'
+                  : 'text-gray-400'
               }`}
             >
-              CONTACT
+              <span className="relative z-10">Contact</span>
+              <span className={`absolute bottom-0 left-0 w-full h-[2px] bg-[#00bfff] transition-all duration-300 ${activeSection === 'contact' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
             </a>
           )}
         </div>
@@ -223,10 +231,10 @@ function Navbar() {
                       ABOUT
                     </a>
                     <a
-                      href="#experience"
+                      href="#journey"
                       onClick={() => setIsMenuOpen(false)}
                       className={`text-sm font-bold uppercase tracking-widest transition-colors ${
-                        activeSection === 'experience'
+                        activeSection === 'journey'
                           ? 'text-white'
                           : 'text-gray-300 hover:text-white'
                       }`}
