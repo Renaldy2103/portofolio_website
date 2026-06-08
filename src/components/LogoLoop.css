@@ -1,0 +1,68 @@
+/*
+  Basic styling for LogoLoop component.
+  The animation itself is driven by JS (transform updates).
+*/
+
+.logoloop {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.logoloop__track {
+  display: flex;
+  flex-direction: row;
+  will-change: transform;
+}
+
+.logoloop--vertical .logoloop__track {
+  flex-direction: column;
+}
+
+.logoloop__list {
+  display: flex;
+  flex-direction: row;
+  gap: var(--logoloop-gap, 64px);
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.logoloop--vertical .logoloop__list {
+  flex-direction: column;
+}
+
+.logoloop__item {
+  height: calc(var(--logoloop-logoHeight, 64px) * 1.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.logoloop__node {
+  height: calc(var(--logoloop-logoHeight, 64px) * 1.05);
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+}
+
+.logoloop__item img {
+  height: calc(var(--logoloop-logoHeight, 64px) * 1.05);
+  width: auto;
+  display: block;
+}
+
+.logoloop__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.logoloop--scale-hover .logoloop__item {
+  transition: transform 200ms ease;
+}
+
+.logoloop--scale-hover:hover .logoloop__item {
+  transform: scale(1.08);
+}
