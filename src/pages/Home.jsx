@@ -269,7 +269,7 @@ function Home() {
             </p>
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 fade-in delay-500 scroll-reveal-target">
             <a className="bg-[#C1E3FC] text-[#2C3E50] px-[36px] py-[23px] rounded-full font-bold uppercase tracking-wide inline-block hover:scale-105 transition-transform" href="#projects"> LIHAT PROYEK </a>
-            <a className="border border-primary/40 text-primary px-10 py-5 rounded-full font-bold hover:bg-primary/10 transition-all transform hover:-translate-y-1 flex items-center gap-2" href="/cv-renaldy.pdf" download="CV_Moch_Renaldy_Syaputra.pdf"> <span className="material-symbols-outlined">download</span> UNDUH CV</a>
+            <a className="border border-primary/40 text-primary px-10 py-5 rounded-full font-bold hover:bg-primary/10 transition-all transform hover:-translate-y-1 flex items-center gap-2" href="/cv.pdf" download="cv-moch-renaldy-syaputra.pdf"> <span className="material-symbols-outlined">download</span> UNDUH CV</a>
             </div>
           </div>
           <div className="flex-1 order-1 lg:order-2 relative group">
