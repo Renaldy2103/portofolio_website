@@ -1,26 +1,30 @@
-import React from 'react';
+
 
 const timelineData = [
   {
+
     date: "Jul 2019 - May 2022",
     category: "Education",
     title: "SMK Negeri 8 Malang",
     subtitle: "Vocational High School - Software Engineering",
-    description: "Membangun fondasi kuat dalam rekayasa perangkat lunak dan pemrograman berorientasi objek (C++ dan Java). Mengembangkan aplikasi web interaktif menggunakan HTML, CSS, PHP, serta merancang dan mengelola relational databases.",
+    description: "Building a strong foundation in software engineering and object-oriented programming (C++ and Java). Developing interactive web applications using HTML, CSS, and PHP, and designing & managing relational databases.",
+
   },
   {
     date: "Jan 2021 - May 2021",
     category: "Work Experience",
     title: "Web Developer Intern",
     subtitle: "Ezy Industries - Malang, Indonesia",
-    description: "Mengembangkan dan memelihara halaman web dinamis menggunakan HTML dan PHP. Membantu desain UI yang responsif, melakukan troubleshoot basis kode, serta secara proaktif mempelajari framework modern seperti Laravel untuk backend dan Vue.js untuk frontend.",
+    description: "Developed and maintained dynamic web pages using HTML and PHP. Supported responsive UI design, debugged codebases, and proactively learned modern frameworks such as Laravel for backend and Vue.js for frontend.",
+
   },
   {
     date: "Aug 2023 - Present",
     category: "Education",
     title: "UIN Maulana Malik Ibrahim Malang",
     subtitle: "Bachelor of Informatics Engineering",
-    description: "Saat ini berada di semester 6, berfokus pada pengembangan perangkat lunak full-stack dan Artificial Intelligence (Python). Membangun antarmuka responsif dan API yang aman (Laravel, Node.js, TailwindCSS), serta mengembangkan aplikasi cross-platform (Flutter) dan game interaktif (Unity).",
+    description: "Currently in semester 6, focusing on full-stack software development and Artificial Intelligence (Python). Building responsive interfaces and secure APIs (Laravel, Node.js, TailwindCSS), as well as developing cross-platform apps (Flutter) and interactive games (Unity).",
+
   }
 ];
 
@@ -64,7 +68,7 @@ const JourneyTimeline = () => {
               <div className={`w-full md:w-[45%] pl-14 md:pl-0 ${isLeft ? 'md:pr-10' : 'md:pl-10'}`}>
 
                 {/* Konten Kartu */}
-                <div className={`p-4 sm:p-6 md:p-7 rounded-2xl bg-gradient-to-br from-[#0d131f] to-[#0a0f18] border border-[#1e293b] hover:border-[#3b82f6]/50 transition-colors duration-300 shadow-xl ${isLeft ? 'md:text-right' : 'md:text-left'} text-left`}>
+                <div className={`p-4 sm:p-6 md:p-7 rounded-2xl glass-card hover:border-[#3b82f6]/50 transition-colors duration-300 shadow-xl ${isLeft ? 'md:text-right' : 'md:text-left'} text-left`}>
 
                   {/* Header Kartu: Label dan Tanggal */}
                   <div className={`flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-3 ${isLeft ? 'md:flex-row-reverse' : ''}`}>

@@ -48,19 +48,20 @@ function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 w-full backdrop-blur-2xl border-t border-b border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)] flex justify-between items-center px-4 sm:px-6 md:px-10 py-3 z-50 transition-colors duration-300 ${isScrolled ? 'bg-[#111111]/60' : 'bg-[#111111]/40'}`}
+        className={`fixed top-0 left-0 right-0 w-full backdrop-blur-2xl border-t border-b border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)] flex justify-between items-center px-4 sm:px-6 lg:px-10 py-3 sm:py-4 z-50 transition-colors duration-300 ${isScrolled ? 'bg-[#111111]/60' : 'bg-[#111111]/40'}`}
       >
         {/* 1. Bagian Logo */}
         <Link
           to="/"
           onClick={() => window.scrollTo(0, 0)}
-          className="font-['Syne'] text-2xl md:text-3xl bg-gradient-to-r from-[#00bfff] via-white to-[#00bfff] bg-clip-text text-transparent hover:opacity-80 transition-opacity uppercase tracking-wider"
+          // PERBAIKAN: Mengubah ukuran teks mobile dan menambahkan truncate agar responsif
+          className="font-['Syne'] text-sm sm:text-xl md:text-2xl lg:text-3xl bg-gradient-to-r from-[#00bfff] via-white to-[#00bfff] bg-clip-text text-transparent hover:opacity-80 transition-opacity uppercase tracking-widest truncate mr-4"
         >
           Moch Renaldy Syaputra
         </Link>
 
         {/* 2. Bagian Menu Navigasi (Desktop) */}
-        <div className="hidden lg:flex items-center gap-8 text-sm">
+        <div className="hidden lg:flex items-center gap-6 lg:gap-8 text-xs sm:text-sm shrink-0">
           {/* Menu HOME */}
           {isHome ? (
             <a
@@ -163,7 +164,7 @@ function Navbar() {
 
         {/* 3. Tombol HIRE ME (Desktop) */}
         <a
-          className="hidden lg:inline-flex bg-[#00bfff] text-black px-6 md:px-8 py-2 md:py-2.5 rounded-full font-bold text-xs md:text-sm hover:scale-105 transition-all duration-300 active:scale-95 shadow-[0_0_15px_rgba(0,191,255,0.4)]"
+          className="hidden lg:inline-flex shrink-0 bg-[#00bfff] text-black px-6 md:px-8 py-2 md:py-2.5 rounded-full font-bold text-xs md:text-sm hover:scale-105 transition-all duration-300 active:scale-95 shadow-[0_0_15px_rgba(0,191,255,0.4)]"
           href={isHome ? 'https://www.linkedin.com/in/moch-renaldy-syaputra-a19552288/' : '/#contact'}
         >
           HIRE ME
@@ -173,7 +174,8 @@ function Navbar() {
         <button
           type="button"
           onClick={() => setIsMenuOpen((v) => !v)}
-          className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/10 hover:border-white/30 hover:bg-white/5 transition-all"
+          // PERBAIKAN: Menambahkan 'shrink-0' agar tombol tidak mengecil tertimpa nama logo
+          className="lg:hidden inline-flex shrink-0 items-center justify-center w-10 h-10 rounded-full border border-white/10 hover:border-white/30 hover:bg-white/5 transition-all"
           aria-label="Open navigation menu"
           aria-expanded={isMenuOpen}
         >
@@ -183,14 +185,14 @@ function Navbar() {
 
       {/* Mobile drawer */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-50">
+        <div className="fixed inset-0 z-[100]">
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setIsMenuOpen(false)}
           />
 
-          <div className="absolute left-1/2 -translate-x-1/2 top-24 w-[92%] max-w-md">
-            <div className="glass-card rounded-[28px] border border-white/10 p-6">
+          <div className="absolute left-1/2 -translate-x-1/2 top-20 sm:top-24 w-[94%] sm:max-w-md">
+            <div className="glass-card rounded-[28px] border border-white/10 p-6 bg-[#111111]/90">
               <div className="flex items-center justify-between mb-6">
                 <div className="text-[#00bfff] font-bold tracking-widest uppercase text-xs">
                   Navigation
@@ -198,7 +200,7 @@ function Navbar() {
                 <button
                   type="button"
                   onClick={() => setIsMenuOpen(false)}
-                  className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-white/30 hover:bg-white/5 transition-all"
+                  className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-white/30 hover:bg-white/5 transition-all text-white"
                   aria-label="Close navigation menu"
                 >
                   <span className="material-symbols-outlined">close</span>
@@ -216,7 +218,7 @@ function Navbar() {
                         window.scrollTo(0, 0);
                       }}
                       className={`text-sm font-bold uppercase tracking-widest transition-colors ${
-                        activeSection === 'home' ? 'text-white' : 'text-gray-300 hover:text-white'
+                        activeSection === 'home' ? 'text-[#00bfff]' : 'text-gray-300 hover:text-white'
                       }`}
                     >
                       HOME
@@ -225,7 +227,7 @@ function Navbar() {
                       href="#about"
                       onClick={() => setIsMenuOpen(false)}
                       className={`text-sm font-bold uppercase tracking-widest transition-colors ${
-                        activeSection === 'about' ? 'text-white' : 'text-gray-300 hover:text-white'
+                        activeSection === 'about' ? 'text-[#00bfff]' : 'text-gray-300 hover:text-white'
                       }`}
                     >
                       ABOUT
@@ -235,7 +237,7 @@ function Navbar() {
                       onClick={() => setIsMenuOpen(false)}
                       className={`text-sm font-bold uppercase tracking-widest transition-colors ${
                         activeSection === 'journey'
-                          ? 'text-white'
+                          ? 'text-[#00bfff]'
                           : 'text-gray-300 hover:text-white'
                       }`}
                     >
@@ -245,7 +247,7 @@ function Navbar() {
                       href="#projects"
                       onClick={() => setIsMenuOpen(false)}
                       className={`text-sm font-bold uppercase tracking-widest transition-colors ${
-                        activeSection === 'projects' ? 'text-white' : 'text-gray-300 hover:text-white'
+                        activeSection === 'projects' ? 'text-[#00bfff]' : 'text-gray-300 hover:text-white'
                       }`}
                     >
                       PROJECTS
@@ -255,7 +257,7 @@ function Navbar() {
                       onClick={() => setIsMenuOpen(false)}
                       className={`text-sm font-bold uppercase tracking-widest transition-colors ${
                         activeSection === 'certificates'
-                          ? 'text-white'
+                          ? 'text-[#00bfff]'
                           : 'text-gray-300 hover:text-white'
                       }`}
                     >
@@ -265,7 +267,7 @@ function Navbar() {
                       href="#contact"
                       onClick={() => setIsMenuOpen(false)}
                       className={`text-sm font-bold uppercase tracking-widest transition-colors ${
-                        activeSection === 'contact' ? 'text-white' : 'text-gray-300 hover:text-white'
+                        activeSection === 'contact' ? 'text-[#00bfff]' : 'text-gray-300 hover:text-white'
                       }`}
                     >
                       CONTACT

@@ -14,7 +14,7 @@ function Projects() {
         <div className="group relative glass-card rounded-[32px] overflow-hidden cursor-pointer card-glow transition-all duration-500">
           <div className="aspect-[16/10] overflow-hidden">
             <img alt="Object Detection Visualization" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 grayscale group-hover:grayscale-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUX4hwqCCxvXWfjYFHEYPnmD6YCt6atMRrxPQAQ4qZAxVJISqyBZFlk-c5xORBDc7Hbc34rWtHbvNKGVbUNTf8gynRZj48NT0p3sVtZqf2xElHiCgHMRovJiH0VOVJbeC-YTXc4ufvkXt-o5I_86Bf4U5wHiaZ47vf07OcyF_QMZF8yC0rlB4T0iDOU3oA7riqu3yewu9PQn5drSXTurPYU3o9r9cmzI6SF-68UYHN2xOYq2NYL2n8Q3570km3SfgBBIwWdJ2-Iu0"/>
-            <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none backdrop-blur-[2px]">
+            <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
               <span className="material-symbols-outlined text-6xl text-white">visibility</span>
             </div>
           </div>
