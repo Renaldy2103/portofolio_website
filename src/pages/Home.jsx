@@ -77,6 +77,16 @@ function Home() {
       tech: ["YOLOV11", "ROBOFLOW", "COLAB"],
       icon: "visibility",
     },
+    {
+      title: "DropshipFlow ( Demo )",
+      category: "FULL STACK",
+      image: "/projects/sales_flow.png",
+      github: "https://github.com/Renaldy2103/sales_flow",
+      description:
+        "Collaborative dropship sales & management system to streamline order entry, collaboration, and delivery workflow.",
+      tech: ["LARAVEL", "REACT", "ROLE-BASED", "COLLAB"],
+      icon: "shopping_cart",
+    },
   ];
 
 
