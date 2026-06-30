@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install ogl)",
+      "Bash(npm install @react-three/fiber @react-three/drei @react-three/rapier meshline three)"
+    ]
+  }
+}
