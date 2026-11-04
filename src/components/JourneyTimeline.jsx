@@ -2,13 +2,11 @@
 
 const timelineData = [
   {
-
     date: "Jul 2019 - May 2022",
     category: "Education",
     title: "SMK Negeri 8 Malang",
     subtitle: "Vocational High School - Software Engineering",
     description: "Building a strong foundation in software engineering and object-oriented programming (C++ and Java). Developing interactive web applications using HTML, CSS, and PHP, and designing & managing relational databases.",
-
   },
   {
     date: "Jan 2021 - May 2021",
@@ -16,15 +14,20 @@ const timelineData = [
     title: "Web Developer Intern",
     subtitle: "Ezy Industries - Malang, Indonesia",
     description: "Developed and maintained dynamic web pages using HTML and PHP. Supported responsive UI design, debugged codebases, and proactively learned modern frameworks such as Laravel for backend and Vue.js for frontend.",
-
   },
   {
     date: "Aug 2023 - Present",
     category: "Education",
     title: "UIN Maulana Malik Ibrahim Malang",
     subtitle: "Bachelor of Informatics Engineering",
-    description: "Currently in semester 6, focusing on full-stack software development and Artificial Intelligence (Python). Building responsive interfaces and secure APIs (Laravel, Node.js, TailwindCSS), as well as developing cross-platform apps (Flutter) and interactive games (Unity).",
-
+    description: "Undergraduate student focusing on full-stack software development and Artificial Intelligence (Python). Building responsive interfaces and secure APIs (Laravel, Node.js, TailwindCSS), as well as developing cross-platform apps (Flutter) and interactive games (Unity).",
+  },
+  {
+    date: "Jul 2024 - Aug 2024",
+    category: "Work Experience",
+    title: "Game Developer Intern",
+    subtitle: "PT Naraya Telematika - Malang, Indonesia",
+    description: "Completed a 1-month internship developing 'Naraya Penyelamat Kota Robot', an educational 2D adventure-puzzle game for children built with Unity 2D (C#). Designed an engaging storyline, interactive puzzle mechanics, and progressive stage-based levels.",
   }
 ];
 

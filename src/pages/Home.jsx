@@ -299,7 +299,7 @@ function Home() {
           </span>
         </h1>
         <p className="font-body-lg text-on-surface-variant max-w-xl mb-12 mx-auto lg:mx-0 fade-in delay-400 scroll-reveal-target">
-          A 6th-semester Information Technology student focusing on Artificial Intelligence, Computer Vision, and NLP. Combining artificial intelligence with modern web development.
+          A Computer Science student and software developer focusing on Artificial Intelligence, Computer Vision, and modern web applications. Combining intelligent algorithms with robust full-stack engineering.
         </p>
         
         {/* Buttons & Icons Container */}
@@ -349,21 +349,21 @@ function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
               <div>
                 <p className="font-body-lg text-on-surface-variant leading-relaxed mb-6 text-base sm:text-lg md:text-xl fade-in delay-200 scroll-reveal-target">
-                  I am a <span className="text-white font-bold">6th-semester Computer Science student</span> currently exploring the vast domains of <span className="text-primary">Machine Learning, Computer Vision, and Natural Language Processing (NLP)</span>.
+                  I am a passionate <span className="text-white font-bold">Software Developer & Computer Science Student</span> exploring the frontiers of <span className="text-primary">Artificial Intelligence, Machine Learning, and Computer Vision</span>.
                 </p>
                 <p className="font-body-lg text-on-surface-variant leading-relaxed fade-in delay-300 scroll-reveal-target">
-                  My motivation lies in building efficient AI solutions and integrating them with interactive, user-friendly web interfaces. I thrive on solving complex problems at the intersection of intelligence and design, aiming to create impactful digital experiences.
+                  Driven by core computer science principles and a builder's mindset, I combine algorithmic foundations with practical software engineering. My focus centers on developing intelligent systems, implementing computer vision solutions, and crafting robust, full-stack web applications that solve real-world problems.
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4 sm:gap-6">
-                <div className="glass-card rounded-2xl p-4 sm:p-6 flex flex-col items-center text-center">
-                  <span className="text-primary font-headline-lg text-3xl sm:text-4xl cyber-text-glow">6th</span>
-                  <span className="text-label-caps text-on-surface-variant uppercase mt-2 text-xs sm:text-sm">Semester Student</span>
+                <div className="glass-card rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center">
+                  <span className="text-primary font-headline-lg text-3xl sm:text-4xl cyber-text-glow">CS</span>
+                  <span className="text-label-caps text-on-surface-variant uppercase mt-2 text-xs sm:text-sm">Student Developer</span>
                 </div>
-                <div className="glass-card rounded-2xl p-4 sm:p-6 flex flex-col items-center text-center">
+                <div className="glass-card rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center">
                   <span className="text-primary font-headline-lg text-3xl sm:text-4xl cyber-text-glow">AI</span>
-                  <span className="text-label-caps text-on-surface-variant uppercase mt-2 text-xs sm:text-sm">Focused Research</span>
+                  <span className="text-label-caps text-on-surface-variant uppercase mt-2 text-xs sm:text-sm">Machine Learning</span>
                 </div>
                 <div className="glass-card rounded-2xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4">
                   <span className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-white/10 flex items-center justify-center">
@@ -371,16 +371,16 @@ function Home() {
                   </span>
                   <div>
                     <p className="text-primary font-label-caps text-xs uppercase tracking-widest">Focus</p>
-                    <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">Real-time vision & AI</p>
+                    <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">Computer Vision & AI</p>
                   </div>
                 </div>
                 <div className="glass-card rounded-2xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4">
                   <span className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-white/10 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-[#00bfff] text-lg sm:text-xl">build</span>
+                    <span className="material-symbols-outlined text-[#00bfff] text-lg sm:text-xl">code</span>
                   </span>
                   <div>
-                    <p className="text-primary font-label-caps text-xs uppercase tracking-widest">Tools</p>
-                    <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">Python, OpenCV, Web</p>
+                    <p className="text-primary font-label-caps text-xs uppercase tracking-widest">Engineering</p>
+                    <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">Full-Stack & Python</p>
                   </div>
                 </div>
               </div>
