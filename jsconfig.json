@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /*  */{
+=======
+{
+>>>>>>> 408476376b55374a5c06fceeadbc00afe5770c3c
     "compilerOptions": {
       "baseUrl": ".",
       "paths": {
