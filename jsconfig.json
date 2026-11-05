@@ -1,8 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*  */{
 =======
 {
 >>>>>>> 408476376b55374a5c06fceeadbc00afe5770c3c
+=======
+/*  */{
+>>>>>>> a001091 (Update website)
     "compilerOptions": {
       "baseUrl": ".",
       "paths": {
