@@ -34,6 +34,16 @@ function Projects() {
       github: "https://github.com/Renaldy2103/sales_flow",
       icon: "shopping_cart",
     },
+    {
+      title: "Software Effort Estimation",
+      category: "ML/AI",
+      image: "/projects/software-effort.png",
+      description:
+        "A web-based software effort estimation system using Elastic Net Regression with hyperparameter tuning and machine learning model integration.",
+      tech: ["PYTHON", "STREAMLIT", "ELASTIC NET", "ML"],
+      github: "https://github.com/Renaldy2103/software-effort-estimation",
+      icon: "analytics",
+    },
   ];
 
   return (
@@ -62,7 +72,7 @@ function Projects() {
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 grayscale group-hover:grayscale-0"
                 src={project.image}
               />
-              <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none backdrop-blur-[2px]">
+              <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                 <span className="material-symbols-outlined text-6xl text-white">
                   {project.icon}
                 </span>
