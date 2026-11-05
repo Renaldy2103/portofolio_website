@@ -54,16 +54,10 @@ function Navbar() {
         <Link
           to="/"
           onClick={() => window.scrollTo(0, 0)}
-<<<<<<< HEAD
           // PERBAIKAN: Mengubah ukuran teks mobile dan menambahkan truncate agar responsif
           className="font-['Syne'] text-sm sm:text-xl md:text-2xl lg:text-3xl bg-gradient-to-r from-[#00bfff] via-white to-[#00bfff] bg-clip-text text-transparent hover:opacity-80 transition-opacity uppercase tracking-widest truncate mr-4"
         >
           Moch Renaldy Syaputra
-=======
-          className="hover:opacity-80 transition-opacity mr-4"
-        >
-          <img src="/Logo navbar.png" alt="Renaldy Logo" className="h-10 sm:h-12 md:h-14 w-auto" />
->>>>>>> a001091 (Update website)
         </Link>
 
         {/* 2. Bagian Menu Navigasi (Desktop) */}
