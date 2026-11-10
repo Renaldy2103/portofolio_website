@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { FaGithub, FaSearch, FaArrowLeft, FaEye } from 'react-icons/fa';
+import Tilt from 'react-parallax-tilt';
 import { projectsData, projectFilterTabs } from '../data/projectsData';
 import ProjectDetailModal from '../components/ProjectDetailModal';
 
@@ -163,10 +164,23 @@ function Projects() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project, idx) => (
-            <div
+            <Tilt
               key={project.id || project.title}
+              tiltMaxAngleX={8}
+              tiltMaxAngleY={8}
+              perspective={900}
+              scale={1.02}
+              transitionSpeed={400}
+              glareEnable={true}
+              glareMaxOpacity={0.12}
+              glareColor="#00bfff"
+              glarePosition="all"
+              glareBorderRadius="28px"
+              className="rounded-[28px]"
+            >
+            <div
               onClick={() => setSelectedProjectIndex(idx)}
-              className="group relative glass-card rounded-[28px] overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_0_30px_rgba(0,191,255,0.2)] flex flex-col"
+              className="group relative glass-card rounded-[28px] overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,191,255,0.2)] flex flex-col h-full"
             >
               {/* Image Preview with Hover Overlay */}
               <div className="aspect-[16/10] overflow-hidden relative bg-black/40">
@@ -254,6 +268,7 @@ function Projects() {
 
               </div>
             </div>
+            </Tilt>
           ))}
         </div>
       )}

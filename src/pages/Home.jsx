@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaGithub, FaEye, FaArrowRight } from "react-icons/fa";
 import emailjs from '@emailjs/browser';
+import Tilt from 'react-parallax-tilt';
 import LogoLoop from "../components/LogoLoop";
 import Aurora from "../components/Aurora";
 import CoolProfileCard from "../components/CoolProfileCard";
@@ -261,14 +262,19 @@ function Home() {
               </div>
 
               <div className="grid grid-cols-2 gap-4 sm:gap-6">
+                <Tilt tiltMaxAngleX={12} tiltMaxAngleY={12} perspective={800} scale={1.04} transitionSpeed={300} glareEnable={true} glareMaxOpacity={0.08} glareColor="#00bfff" glarePosition="all" glareBorderRadius="16px">
                 <div className="glass-card rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center">
                   <span className="text-primary font-headline-lg text-3xl sm:text-4xl cyber-text-glow">CS</span>
                   <span className="text-label-caps text-on-surface-variant uppercase mt-2 text-xs sm:text-sm">Student Developer</span>
                 </div>
+                </Tilt>
+                <Tilt tiltMaxAngleX={12} tiltMaxAngleY={12} perspective={800} scale={1.04} transitionSpeed={300} glareEnable={true} glareMaxOpacity={0.08} glareColor="#00bfff" glarePosition="all" glareBorderRadius="16px">
                 <div className="glass-card rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center">
                   <span className="text-primary font-headline-lg text-3xl sm:text-4xl cyber-text-glow">AI</span>
                   <span className="text-label-caps text-on-surface-variant uppercase mt-2 text-xs sm:text-sm">Machine Learning</span>
                 </div>
+                </Tilt>
+                <Tilt tiltMaxAngleX={12} tiltMaxAngleY={12} perspective={800} scale={1.04} transitionSpeed={300} glareEnable={true} glareMaxOpacity={0.08} glareColor="#00bfff" glarePosition="all" glareBorderRadius="16px">
                 <div className="glass-card rounded-2xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4">
                   <span className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-white/10 flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#00bfff] text-lg sm:text-xl">psychology</span>
@@ -278,6 +284,8 @@ function Home() {
                     <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">Computer Vision & AI</p>
                   </div>
                 </div>
+                </Tilt>
+                <Tilt tiltMaxAngleX={12} tiltMaxAngleY={12} perspective={800} scale={1.04} transitionSpeed={300} glareEnable={true} glareMaxOpacity={0.08} glareColor="#00bfff" glarePosition="all" glareBorderRadius="16px">
                 <div className="glass-card rounded-2xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4">
                   <span className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 border border-white/10 flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#00bfff] text-lg sm:text-xl">code</span>
@@ -287,6 +295,7 @@ function Home() {
                     <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">Full-Stack & Python</p>
                   </div>
                 </div>
+                </Tilt>
               </div>
             </div>
           </div>
@@ -499,10 +508,23 @@ function Home() {
                 .map((project, index) => {
                   const globalIndex = pageIndex * cardsPerPage + index;
                   return (
-                    <div
+                    <Tilt
                       key={project.id || index}
+                      tiltMaxAngleX={8}
+                      tiltMaxAngleY={8}
+                      perspective={900}
+                      scale={1.02}
+                      transitionSpeed={400}
+                      glareEnable={true}
+                      glareMaxOpacity={0.12}
+                      glareColor="#00bfff"
+                      glarePosition="all"
+                      glareBorderRadius="32px"
+                      className="rounded-[32px]"
+                    >
+                    <div
                       onClick={() => setSelectedProjectIndex(globalIndex)}
-                      className="group relative glass-card rounded-[32px] overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_35px_rgba(0,191,255,0.22)] flex flex-col justify-between"
+                      className="group relative glass-card rounded-[32px] overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-all duration-500 hover:shadow-[0_0_35px_rgba(0,191,255,0.22)] flex flex-col justify-between h-full"
                     >
                       <div>
                         {/* Image Preview with Hover Action */}
@@ -575,6 +597,7 @@ function Home() {
                         )}
                       </div>
                     </div>
+                    </Tilt>
                   );
                 })}
             </div>
@@ -655,10 +678,23 @@ function Home() {
       className="flex overflow-x-auto gap-6 pb-6 scroll-smooth snap-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {certificatesData.map((cert, index) => (
-        <div
+        <Tilt
           key={cert.id}
+          tiltMaxAngleX={7}
+          tiltMaxAngleY={7}
+          perspective={1000}
+          scale={1.02}
+          transitionSpeed={400}
+          glareEnable={true}
+          glareMaxOpacity={0.1}
+          glareColor="#00bfff"
+          glarePosition="all"
+          glareBorderRadius="26px"
+          className="flex-none w-[88%] sm:w-[48%] lg:w-[32%] snap-start rounded-[26px]"
+        >
+        <div
           onClick={() => setSelectedCertificateIndex(index)}
-          className="flex-none w-[88%] sm:w-[48%] lg:w-[32%] snap-start glass-card rounded-[26px] overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_0_25px_rgba(0,191,255,0.2)] flex flex-col justify-between group"
+          className="glass-card rounded-[26px] overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-all duration-300 hover:shadow-[0_0_25px_rgba(0,191,255,0.2)] flex flex-col justify-between group h-full"
         >
           <div>
             {/* Image Container with Zoom & Hover CTA */}
@@ -720,6 +756,7 @@ function Home() {
             <span className="font-mono text-gray-400">{cert.date}</span>
           </div>
         </div>
+        </Tilt>
       ))}
     </div>
 
@@ -758,25 +795,32 @@ function Home() {
             I am open to collaborating on AI projects, Web Development, or Data Science research. Contact me today.
             </p>
 
-            <div className="space-y-6 sm:space-y-8">
-              <div className="flex items-center gap-4 sm:gap-6 group">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center group-hover:border-[#00bfff]/50 transition-all">
-                  <span className="material-symbols-outlined text-[#86a8c3]">mail</span>
+            <div className="space-y-4 sm:space-y-6">
+              <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} perspective={800} scale={1.03} transitionSpeed={300} glareEnable={true} glareMaxOpacity={0.08} glareColor="#00bfff" glarePosition="all" glareBorderRadius="16px">
+                <a
+                  href="mailto:renaldy.syaputra2103@gmail.com"
+                  className="flex items-center gap-4 sm:gap-6 group glass-card p-4 sm:p-5 rounded-2xl border border-white/5 hover:border-[#00bfff]/50 transition-all block"
+                >
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center group-hover:border-[#00bfff]/50 transition-all shrink-0">
+                    <span className="material-symbols-outlined text-[#86a8c3] group-hover:text-[#00bfff] transition-colors">mail</span>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Email Me</p>
+                    <p className="text-white font-bold text-sm sm:text-base md:text-lg truncate group-hover:text-[#00bfff] transition-colors">renaldy.syaputra2103@gmail.com</p>
+                  </div>
+                </a>
+              </Tilt>
+              <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} perspective={800} scale={1.03} transitionSpeed={300} glareEnable={true} glareMaxOpacity={0.08} glareColor="#00bfff" glarePosition="all" glareBorderRadius="16px">
+                <div className="flex items-center gap-4 sm:gap-6 group glass-card p-4 sm:p-5 rounded-2xl border border-white/5 hover:border-[#00bfff]/50 transition-all">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center group-hover:border-[#00bfff]/50 transition-all shrink-0">
+                    <span className="material-symbols-outlined text-[#86a8c3] group-hover:text-[#00bfff] transition-colors">location_on</span>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Location</p>
+                    <p className="text-white font-bold text-sm sm:text-base md:text-lg">Malang, Indonesia</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Email Me</p>
-                  <p className="text-white font-bold text-sm sm:text-base md:text-lg">renaldy.syaputra2103@gmail.com</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 sm:gap-6 group">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center group-hover:border-[#00bfff]/50 transition-all">
-                  <span className="material-symbols-outlined text-[#86a8c3]">location_on</span>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Location</p>
-                  <p className="text-white font-bold text-sm sm:text-base md:text-lg">Malang, Indonesia</p>
-                </div>
-              </div>
+              </Tilt>
             </div>
           </div>
 

@@ -1,5 +1,7 @@
 
 
+import Tilt from 'react-parallax-tilt';
+
 const timelineData = [
   {
     date: "Jul 2019 - May 2022",
@@ -70,6 +72,18 @@ const JourneyTimeline = () => {
               {/* Wadah Kartu (Dibatasi 45% agar tidak menabrak titik) */}
               <div className={`w-full md:w-[45%] pl-14 md:pl-0 ${isLeft ? 'md:pr-10' : 'md:pl-10'}`}>
 
+                <Tilt
+                  tiltMaxAngleX={7}
+                  tiltMaxAngleY={7}
+                  perspective={1000}
+                  scale={1.02}
+                  transitionSpeed={350}
+                  glareEnable={true}
+                  glareMaxOpacity={0.08}
+                  glareColor="#3b82f6"
+                  glarePosition="all"
+                  glareBorderRadius="16px"
+                >
                 {/* Konten Kartu */}
                 <div className={`p-4 sm:p-6 md:p-7 rounded-2xl glass-card hover:border-[#3b82f6]/50 transition-colors duration-300 shadow-xl ${isLeft ? 'md:text-right' : 'md:text-left'} text-left`}>
 
@@ -98,6 +112,7 @@ const JourneyTimeline = () => {
                   </p>
 
                 </div>
+                </Tilt>
 
               </div>
 

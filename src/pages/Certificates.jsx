@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaSearch, FaEye, FaAward, FaCalendarAlt, FaCheckCircle } from 'react-icons/fa';
+import Tilt from 'react-parallax-tilt';
 import { certificatesData, certificateFilterTabs } from '../data/certificatesData';
 import CertificateModal from '../components/CertificateModal';
 
@@ -156,10 +157,23 @@ function Certificates() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredCertificates.map((cert, idx) => (
-            <div
+            <Tilt
               key={cert.id}
+              tiltMaxAngleX={8}
+              tiltMaxAngleY={8}
+              perspective={900}
+              scale={1.02}
+              transitionSpeed={400}
+              glareEnable={true}
+              glareMaxOpacity={0.12}
+              glareColor="#00bfff"
+              glarePosition="all"
+              glareBorderRadius="28px"
+              className="rounded-[28px]"
+            >
+            <div
               onClick={() => setSelectedCertIndex(idx)}
-              className="group relative glass-card rounded-[28px] overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_0_30px_rgba(0,191,255,0.2)] flex flex-col justify-between"
+              className="group relative glass-card rounded-[28px] overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,191,255,0.2)] flex flex-col justify-between h-full"
             >
               <div>
                 {/* Image Container with Hover Overlay */}
@@ -237,6 +251,7 @@ function Certificates() {
                 </span>
               </div>
             </div>
+            </Tilt>
           ))}
         </div>
       )}

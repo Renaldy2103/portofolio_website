@@ -208,7 +208,6 @@ function Navbar() {
         <button
           type="button"
           onClick={() => setIsMenuOpen((v) => !v)}
-          // PERBAIKAN: Menambahkan 'shrink-0' agar tombol tidak mengecil tertimpa nama logo
           className="lg:hidden inline-flex shrink-0 items-center justify-center w-10 h-10 rounded-full border border-white/10 hover:border-white/30 hover:bg-white/5 transition-all"
           aria-label="Open navigation menu"
           aria-expanded={isMenuOpen}
