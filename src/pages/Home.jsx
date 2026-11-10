@@ -1,113 +1,30 @@
 import { useEffect, useRef, useState } from 'react';
-import { FaGithub } from "react-icons/fa";
+import { Link } from 'react-router-dom';
+import { FaGithub, FaEye, FaArrowRight } from "react-icons/fa";
 import emailjs from '@emailjs/browser';
 import LogoLoop from "../components/LogoLoop";
 import Aurora from "../components/Aurora";
 import CoolProfileCard from "../components/CoolProfileCard";
 import JourneyTimeline from "../components/JourneyTimeline";
 import fotoProfil from "../assets/PhotoProfile.jpeg";
+import { projectsData } from "../data/projectsData";
+import { certificatesData } from "../data/certificatesData";
+import ProjectDetailModal from "../components/ProjectDetailModal";
+import CertificateModal from "../components/CertificateModal";
 
 
 function Home() {
-  const projects = [
-    {
-      title: "This Portofolio Website",
-      category: "WEB APP",
-      image: "/projects/my_web.jpeg",
-      github: "https://github.com/Renaldy2103/portofolio_website",
-      description: "My personal web project built for a clean, modern user experience.",
-      tech: ["WEB", "UI/UX", "React JS", "TailwindCss"],
-      icon: "language",
-    },
-    {
-      title: "Drowsiness Detection",
-      category: "AI/ML",
-      image: "/projects/pendeteksi_kantuk.png", // Path asset tetap
-      github: "https://github.com/Renaldy2103/pendeteksi_kantuk",
-      description: "A Python and Computer Vision-based drowsiness detection system that detects eye conditions in real time.",
-
-      tech: ["PYTHON", "OPENCV", "COMPUTER VISION"],
-      icon: "visibility",
-    },
-    {
-      title: "Health Care",
-      category: "WEB APP",
-      image: "/projects/health_care.png",
-      github: "https://github.com/Renaldy2103/health_care",
-      description: "A healthcare information system built with PHP & MySQL for managing patients, doctors, prescriptions, and payments.",
-
-      tech: ["PHP", "MYSQL", "WEB DEVELOPMENT"],
-      icon: "medical_services",
-    },
-    {
-      title: "Smart Hospital",
-      category: "HEALTHCARE",
-      image: "/projects/smart_hospital.png",
-      description: "A modern hospital platform integrating IoT, AI, Cloud Computing, and Big Data.",
-      tech: ["PHP", "MYSQL", "IOT"],
-
-      icon: "local_hospital",
-    },
-    {
-      title: "Game Marbot Simulator",
-      category: "GAME DEV",
-      image: "/projects/marbot_simulator.png",
-      github: "https://github.com/Renaldy2103/game_marbot_simulator",
-      description: "A 3D simulation game set in a mosque marbot role, with missions to keep the environment clean and secure.",
-
-      tech: ["UNITY", "C#", "3D GAME"],
-      icon: "sports_esports",
-    },
-    {
-      title: "Ummat Agenda",
-      category: "FLUTTER",
-      image: "/projects/ummat_app.png",
-      github: "https://github.com/Renaldy2103/Ummat_App",
-      description: "A Flutter-based mobile app for managing events and the Muslim community.",
-
-      tech: ["FLUTTER", "DART", "MOBILE"],
-      icon: "event",
-    },
-    {
-      title: "YOLOv11 Object Detection",
-      category: "AI / ML",
-      image: "/projects/deteksi_objek.png",
-      description: "Implementation and evaluation of the YOLOv11 model using Roboflow and Google Colab.",
-
-      tech: ["YOLOV11", "ROBOFLOW", "COLAB"],
-      icon: "visibility",
-    },
-    {
-      title: "DropshipFlow ( Demo )",
-      category: "FULL STACK",
-      image: "/projects/sales_flow.png",
-      github: "https://github.com/Renaldy2103/sales_flow",
-      description:
-        "Collaborative dropship sales & management system to streamline order entry, collaboration, and delivery workflow.",
-      tech: ["LARAVEL", "REACT", "ROLE-BASED", "COLLAB"],
-      icon: "shopping_cart",
-    },
-    {
-      title: "Software Effort Estimation",
-      category: "ML/AI",
-      image: "/projects/software-effort.png",
-      github: "https://github.com/Renaldy2103/software-effort-estimation",
-      description: "A web-based software effort estimation system using Elastic Net Regression with hyperparameter tuning and machine learning model integration.",
-      tech: ["PYTHON", "STREAMLIT", "ELASTIC NET", "ML"],
-      icon: "analytics",
-    },
-  ];
-
+  const projects = projectsData;
 
   // ==========================================
-  // 2. STATE & REF UTAMA (Solusi Error Anda)
+  // 2. STATE & REF UTAMA
   // ==========================================
   // State untuk pagination project
   const [currentPage, setCurrentPage] = useState(0);
   const cardsPerPage = 2;
   const totalPages = Math.ceil(projects.length / cardsPerPage);
 
-  // State & Ref untuk sertifikat (Mencegah error 'not defined')
+  // State & Ref untuk sertifikat
   const certificateContainerRef = useRef(null);
 
   // Ref & State untuk EmailJS form kontak
@@ -115,9 +32,8 @@ function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
-  // ==========================================
-  // Certificate Modal State
-  // ==========================================
+  // Modal State untuk Project & Certificate
+  const [selectedProjectIndex, setSelectedProjectIndex] = useState(null);
   const [selectedCertificateIndex, setSelectedCertificateIndex] = useState(null);
 
   // ==========================================
@@ -137,7 +53,37 @@ function Home() {
     }
   };
 
-  // Fungsi scroll slider untuk sertifikat (Menghilangkan warning 'never used')
+  // Navigasi modal project
+  const handlePrevProject = () => {
+    setSelectedProjectIndex((prev) => {
+      if (prev === null) return null;
+      return (prev - 1 + projects.length) % projects.length;
+    });
+  };
+
+  const handleNextProject = () => {
+    setSelectedProjectIndex((prev) => {
+      if (prev === null) return null;
+      return (prev + 1) % projects.length;
+    });
+  };
+
+  // Navigasi modal sertifikat
+  const handlePrevCert = () => {
+    setSelectedCertificateIndex((prev) => {
+      if (prev === null) return null;
+      return (prev - 1 + certificatesData.length) % certificatesData.length;
+    });
+  };
+
+  const handleNextCert = () => {
+    setSelectedCertificateIndex((prev) => {
+      if (prev === null) return null;
+      return (prev + 1) % certificatesData.length;
+    });
+  };
+
+  // Fungsi scroll slider untuk sertifikat
   const scroll = (direction) => {
     if (certificateContainerRef.current) {
       const { scrollLeft, clientWidth } = certificateContainerRef.current;
@@ -169,57 +115,6 @@ function Home() {
       setIsSubmitting(false);
     });
   };
-
-  // ==========================================
-  // 4. DATA SERTIFIKAT (ARRAY OBJECT)
-  // ==========================================
-  const certificatesData = [
-    {
-      id: 1,
-      category: 'TECHNICAL',
-      date: 'APR 2022',
-      title: 'Fundamental Frontend Engineer with Vue Js',
-      issuer: 'Alterra Academy',
-      image: '/certificate/alterra.jpeg', 
-      icon: 'verified'
-    },
-    {
-      id: 2,
-      category: 'TECHNICAL',
-      date: 'FEB 2022',
-      title: 'Java Fundamentals',
-      issuer: 'Oracle Academy',
-      image: '/certificate/oracle_java.jpeg',
-      icon: 'code'
-    },
-    {
-      id: 3,
-      category: 'TECHNICAL',
-      date: 'MAY 2022',
-      title: 'PCAP: Programming Essentials in Python',
-      issuer: 'Cisco Networking Academy & Python Institute',
-      image: '/certificate/python_cisco.jpeg',
-      icon: 'integration_instructions'
-    },
-    {
-      id: 4,
-      category: 'SOFTSKILL',
-      date: 'JUN 2021',
-      title: 'Surat Keterangan Praktik Kerja Lapangan (PKL)',
-      issuer: 'EZY INDUSTRIES (SMKN 8 Malang)',
-      image: '/certificate/ezy.jpeg',
-      icon: 'history_edu'
-    },
-    {
-      id: 5,
-      category: 'TECHNICAL',
-      date: 'MAY 2022',
-      title: 'Sertifikat Uji Kompetensi: Rekayasa Perangkat Lunak',
-      issuer: 'SMKN 8 Malang & PT. Retgoo Sentris Informa',
-      image: '/certificate/smk.jpeg',
-      icon: 'military_tech'
-    }
-  ];
 
   // ==========================================
   // 5. EFFECTS (Scroll Animation Observer)
@@ -273,7 +168,7 @@ function Home() {
   }, []);
 
   return (
-    <>
+    <div className="overflow-x-hidden">
       {/* Background Blooms */}
       <div className="bloom-bg top-[-200px] right-[-100px]"></div>
       <div className="bloom-bg bottom-[-200px] left-[-200px]"></div>
@@ -288,8 +183,8 @@ function Home() {
         />
       </div>
 
-      <main className="max-w-10xl mx-auto px-6 md:px-12 lg:px-16 pt-32 md:pt-40">
-      <section className="flex flex-col lg:flex-row items-center justify-between gap-16 min-h-[75vh] mb-40 relative scroll-reveal-target" id="home">
+      <main className="max-w-10xl mx-auto px-4 sm:px-6 md:px-12 lg:px-16 pt-24 sm:pt-32 md:pt-40">
+      <section className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 min-h-[70vh] mb-20 sm:mb-28 lg:mb-40 relative scroll-reveal-target" id="home">
       <div className="flex-1 order-2 lg:order-1 text-center lg:text-left">
         <p className="text-primary font-label-caps tracking-[0.3em] mb-6 uppercase fade-in delay-100 scroll-reveal-target">
           Hi, I'm {" "}
@@ -312,27 +207,27 @@ function Home() {
         </p>
         
         {/* Buttons & Icons Container */}
-        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 fade-in delay-500 scroll-reveal-target">
-          <a className="bg-[#C1E3FC] text-[#2C3E50] px-[36px] py-[23px] rounded-full font-bold uppercase tracking-wide inline-block hover:scale-105 transition-transform" href="#projects"> 
+        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 fade-in delay-500 scroll-reveal-target">
+          <a className="bg-[#C1E3FC] text-[#2C3E50] px-6 py-3.5 sm:px-8 sm:py-4 md:px-9 md:py-5 rounded-full font-bold uppercase tracking-wide inline-block hover:scale-105 transition-transform text-sm sm:text-base" href="#projects"> 
             My Project 
           </a>
           
-          <a className="border border-primary/40 text-primary px-10 py-5 rounded-full font-bold hover:bg-primary/10 transition-all transform hover:-translate-y-1 flex items-center gap-2" href="/cv.pdf" download="cv-moch-renaldy-syaputra.pdf"> 
-            <span className="material-symbols-outlined">download</span> Download CV
+          <a className="border border-primary/40 text-primary px-6 py-3.5 sm:px-8 sm:py-4 md:px-9 md:py-5 rounded-full font-bold hover:bg-primary/10 transition-all transform hover:-translate-y-1 flex items-center gap-2 text-sm sm:text-base" href="/cv.pdf" download="cv-moch-renaldy-syaputra.pdf"> 
+            <span className="material-symbols-outlined text-lg sm:text-xl">download</span> Download CV
           </a>
 
           {/* Social Media Icons */}
-          <div className="flex items-center gap-5 ml-2">
+          <div className="flex items-center gap-5 ml-0 sm:ml-2 mt-2 sm:mt-0">
             {/* GitHub Icon */}
-            <a href="https://github.com/Renaldy2103/Renaldy2103" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors hover:scale-110 transform duration-200">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <a href="https://github.com/Renaldy2103/Renaldy2103" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors hover:scale-110 transform duration-200" aria-label="GitHub">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
               </svg>
             </a>
             
             {/* LinkedIn Icon */}
-            <a href="www.linkedin.com/in/moch-renaldy-syaputra-a19552288" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#0a66c2] transition-colors hover:scale-110 transform duration-200">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <a href="https://www.linkedin.com/in/moch-renaldy-syaputra-a19552288" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#0a66c2] transition-colors hover:scale-110 transform duration-200" aria-label="LinkedIn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
                 <rect x="2" y="9" width="4" height="12"></rect>
                 <circle cx="4" cy="4" r="2"></circle>
@@ -509,52 +404,75 @@ function Home() {
         <JourneyTimeline />
 
 {/* My Work Section */}
-<section
-      className="mb-40 px-6 md:px-12 lg:px-16 scroll-reveal-target"
+    <section
+      className="mb-20 sm:mb-28 lg:mb-40 scroll-reveal-target"
       id="projects"
     >
       {/* HEADER */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 gap-6">
         <div>
-          <div className="flex items-center gap-4 mb-4">
-            <div className="h-[2px] w-8 bg-[#86a8c3]"></div>
-            <span className="text-[#86a8c3] font-bold text-sm uppercase tracking-widest">
-              Featured Projects
+          <div className="flex items-center gap-4 mb-3">
+            <div className="h-[2px] w-8 bg-[#00bfff]"></div>
+            <span className="text-[#00bfff] font-bold text-xs uppercase tracking-widest">
+              Featured Projects & Selected Works
             </span>
           </div>
 
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl uppercase text-white tracking-wide [text-shadow:-1.5px_0_#00bfff,1.5px_0_#ff4500]">
             My Work
           </h2>
+          <p className="text-gray-400 text-sm sm:text-base max-w-2xl mt-3">
+            Curated software engineering systems, AI/ML pipelines, and interactive web applications. Click any card to explore full technical summaries, architectures, and source code.
+          </p>
         </div>
 
-        <div className="flex flex-col items-start md:items-end gap-6">
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-2 bg-[#00bfff] text-black px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(0,191,255,0.35)]"
+          >
+            <span>Explore All Projects</span>
+            <FaArrowRight size={11} />
+          </Link>
+
           <a
             href="https://github.com/Renaldy2103?tab=repositories"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#00bfff] font-bold text-sm hover:underline underline-offset-8 uppercase tracking-widest"
+            className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10 hover:border-white/20 px-4 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all"
           >
-            VIEW ALL ON GITHUB
+            <FaGithub size={14} />
+            <span>GitHub</span>
           </a>
 
-          <div className="hidden sm:flex gap-4">
+          <div className="flex items-center gap-2 ml-2">
+            <span className="text-xs font-mono text-gray-400 mr-2">
+              {currentPage + 1}/{totalPages}
+            </span>
             <button
               onClick={prevSlide}
-              className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:border-white/30 hover:bg-white/5 transition-all text-[#00bfff]"
+              disabled={currentPage === 0}
+              className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all ${
+                currentPage === 0
+                  ? 'border-white/5 text-gray-600 cursor-not-allowed'
+                  : 'border-white/15 text-white hover:border-[#00bfff] hover:text-[#00bfff] hover:bg-[#00bfff]/10'
+              }`}
+              aria-label="Previous Projects"
             >
-              <span className="material-symbols-outlined">
-                arrow_back
-              </span>
+              <span className="material-symbols-outlined text-lg">arrow_back</span>
             </button>
 
             <button
               onClick={nextSlide}
-              className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:border-white/30 hover:bg-white/5 transition-all text-[#00bfff]"
+              disabled={currentPage >= totalPages - 1}
+              className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all ${
+                currentPage >= totalPages - 1
+                  ? 'border-white/5 text-gray-600 cursor-not-allowed'
+                  : 'border-white/15 text-white hover:border-[#00bfff] hover:text-[#00bfff] hover:bg-[#00bfff]/10'
+              }`}
+              aria-label="Next Projects"
             >
-              <span className="material-symbols-outlined">
-                arrow_forward
-              </span>
+              <span className="material-symbols-outlined text-lg">arrow_forward</span>
             </button>
           </div>
         </div>
@@ -578,233 +496,248 @@ function Home() {
                   pageIndex * cardsPerPage,
                   pageIndex * cardsPerPage + cardsPerPage
                 )
-                .map((project, index) => (
-                  <div
-                    key={index}
-                    className="group relative glass-card rounded-[32px] overflow-hidden cursor-pointer card-glow transition-all duration-500"
-                  >
-                    <div className="aspect-[16/10] overflow-hidden">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 grayscale group-hover:grayscale-0"
-                      />
+                .map((project, index) => {
+                  const globalIndex = pageIndex * cardsPerPage + index;
+                  return (
+                    <div
+                      key={project.id || index}
+                      onClick={() => setSelectedProjectIndex(globalIndex)}
+                      className="group relative glass-card rounded-[32px] overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_35px_rgba(0,191,255,0.22)] flex flex-col justify-between"
+                    >
+                      <div>
+                        {/* Image Preview with Hover Action */}
+                        <div className="aspect-[16/10] overflow-hidden relative bg-black/40">
+                          <img
+                            src={project.image}
+                            alt={project.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#111317] via-transparent to-transparent opacity-80" />
 
-                      <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                        <span className="material-symbols-outlined text-6xl text-white">
-                          {project.icon}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="p-6 sm:p-10">
-                      <div className="flex flex-col sm:flex-row justify-between items-start gap-2 mb-4 sm:mb-6">
-                        <h3 className="font-title-md text-xl sm:text-2xl text-white group-hover:text-primary transition-colors">
-                          {project.title}
-                        </h3>
-
-                        <span className="bg-primary-container/20 text-primary-container px-3 py-1 sm:px-4 sm:py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest border border-primary/20 whitespace-nowrap">
-                          {project.category}
-                        </span>
-                      </div>
-
-                      <p className="font-body-sm text-on-surface-variant mb-6 sm:mb-8 text-sm sm:text-base line-clamp-2">
-                        {project.description}
-                      </p>
-
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div className="flex flex-wrap gap-2 sm:gap-4">
-                          {project.tech.map((item) => (
-                            <span
-                              key={item}
-                              className="text-xs text-primary font-bold tracking-widest flex items-center gap-1"
-                            >
-                              <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                              {item}
+                          {/* Hover CTA Button */}
+                          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span className="inline-flex items-center gap-2 bg-[#00bfff] text-black px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,191,255,0.6)] transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300">
+                              <FaEye size={13} />
+                              <span>View Project Details</span>
                             </span>
-                          ))}
+                          </div>
+
+                          {/* Category Badge */}
+                          <div className="absolute top-4 left-4 z-10">
+                            <span className="bg-black/70 backdrop-blur-md text-[#00bfff] px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-[#00bfff]/30">
+                              {project.category}
+                            </span>
+                          </div>
                         </div>
+
+                        {/* Card Body */}
+                        <div className="p-6 sm:p-8">
+                          <h3 className="font-title-md text-xl sm:text-2xl text-white group-hover:text-[#00bfff] transition-colors mb-3 line-clamp-1 font-bold">
+                            {project.title}
+                          </h3>
+
+                          <p className="text-gray-400 mb-6 text-xs sm:text-sm leading-relaxed line-clamp-2">
+                            {project.description}
+                          </p>
+
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            {project.tech.map((item) => (
+                              <span
+                                key={item}
+                                className="text-[11px] text-[#00bfff] font-bold tracking-wider flex items-center gap-1.5 bg-[#00bfff]/5 border border-[#00bfff]/20 px-2.5 py-1 rounded-full"
+                              >
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#00bfff]"></span>
+                                {item}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card Footer */}
+                      <div className="px-6 sm:px-8 py-4 border-t border-white/5 flex items-center justify-between text-xs">
+                        <span className="text-gray-400 group-hover:text-white transition-colors font-medium flex items-center gap-1">
+                          <span>View project details</span>
+                          <span className="group-hover:translate-x-1 transition-transform">→</span>
+                        </span>
 
                         {project.github && (
                           <a
                             href={project.github}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-white hover:text-[#00bfff] transition mt-2 sm:mt-0"
+                            onClick={(e) => e.stopPropagation()}
+                            className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                            aria-label={`GitHub repo for ${project.title}`}
                           >
-                            <FaGithub size={24} />
+                            <FaGithub size={18} />
                           </a>
                         )}
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
             </div>
           ))}
         </div>
       </div>
+
+      {/* Project Detail Modal */}
+      {selectedProjectIndex !== null && (
+        <ProjectDetailModal
+          project={projects[selectedProjectIndex]}
+          onClose={() => setSelectedProjectIndex(null)}
+          onPrev={handlePrevProject}
+          onNext={handleNextProject}
+          currentIndex={selectedProjectIndex}
+          total={projects.length}
+        />
+      )}
     </section>
 
   {/* CERTIFICATES & ACHIEVEMENTS SECTION */}
-{/* ========================================================= */}
-<section className="mb-40 scroll-reveal-target relative px-4 sm:px-0" id="certificates">
-
-  {/* Header Container: Menggunakan flex untuk membagi judul (kiri) dan tombol (kanan) */}
-  <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-6 relative">
-
-    {/* Sisi Kiri: Judul & Teks Deskripsi */}
-    <div className="text-left">
-      <div className="flex items-center gap-4 mb-4">
-        <span className="text-[#86a8c3] font-bold text-sm uppercase tracking-widest">Validations</span>
-        <div className="h-[2px] w-8 bg-[#86a8c3]"></div>
-      </div>
-      <h2 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[54px] uppercase tracking-wide leading-tight mb-4">
-        <span className="text-white">CERTIFICATES &  </span>
-        <span className="text-[#00bfff]">ACHIEVEMENTS</span>
-      </h2>
-      <p className="text-gray-400 max-w-xl text-sm md:text-base">
-Collections of technical validations and personal growth highlights throughout my technology career journey.
-      </p>
-    </div>
-
-    {/* Sisi Kanan Atas: Tombol Navigasi Minimalis (Tanpa Tulisan Teks) */}
-    <div className="flex gap-3 self-end md:self-auto">
-      <button
-        onClick={() => scroll('left')}
-        className="w-12 h-12 rounded-xl bg-[#1a1a1a] border border-white/10 text-white flex items-center justify-center hover:bg-[#252525] hover:border-white/20 active:scale-95 transition-all group"
-        aria-label="Scroll Left"
-      >
-        <span className="material-symbols-outlined text-xl group-hover:-translate-x-0.5 transition-transform">
-          arrow_back
-        </span>
-      </button>
-      <button
-        onClick={() => scroll('right')}
-        className="w-12 h-12 rounded-xl bg-[#1a1a1a] border border-white/10 text-white flex items-center justify-center hover:bg-[#252525] hover:border-white/20 active:scale-95 transition-all group"
-        aria-label="Scroll Right"
-      >
-        <span className="material-symbols-outlined text-xl group-hover:translate-x-0.5 transition-transform">
-          arrow_forward
-        </span>
-      </button>
-    </div>
-
-  </div>
-
-  {/* Kontainer Slider Sertifikat */}
-  <div
-    ref={certificateContainerRef}
-    className="flex overflow-x-auto gap-4 sm:gap-6 pb-6 scroll-smooth snap-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-  >
-            {certificatesData.map((cert, index) => (
-      <div
-        key={cert.id}
-        onClick={() => setSelectedCertificateIndex(index)}
-        className="flex-none w-[85%] sm:w-[48%] lg:w-[31%] snap-start bg-[#1a1a1a] p-4 sm:p-5 rounded-2xl border border-white/5 flex flex-col justify-between"
-      >
-        <div>
-          <img
-            src={cert.image}
-            alt={cert.title}
-            className="w-full aspect-[4/3] object-cover rounded-xl mb-3 sm:mb-4 bg-black/20 cursor-zoom-in hover:opacity-95 transition-opacity"
-          />
-          <span className="text-[10px] sm:text-xs text-[#00bfff] font-bold tracking-widest uppercase block mb-2">
-            {cert.category}
+  {/* ========================================================= */}
+  <section className="mb-20 sm:mb-28 lg:mb-40 scroll-reveal-target relative" id="certificates">
+    {/* Header */}
+    <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-6 relative">
+      <div>
+        <div className="flex items-center gap-4 mb-3">
+          <div className="h-[2px] w-8 bg-[#00bfff]"></div>
+          <span className="text-[#00bfff] font-bold text-xs uppercase tracking-widest">
+            Validations & Credentials
           </span>
-          <h3 className="text-white font-bold text-sm sm:text-base md:text-lg leading-snug line-clamp-2">
-            {cert.title}
-          </h3>
         </div>
-        <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/5 flex justify-between items-center text-gray-400 text-xs">
-          <span className="truncate max-w-[70%]">{cert.issuer}</span>
-          <span className="font-mono">{cert.date}</span>
+        <h2 className="font-display text-3xl sm:text-4xl md:text-5xl uppercase tracking-wide leading-tight mb-3">
+          <span className="text-white">Certificates & </span>
+          <span className="text-[#00bfff] [text-shadow:0_0_20px_rgba(0,191,255,0.4)]">Achievements</span>
+        </h2>
+        <p className="text-gray-400 max-w-xl text-xs sm:text-sm">
+          Official industry credentials, national vocational competencies, and verified technical certificates. Click any card to preview full credentials.
+        </p>
+      </div>
+
+      {/* Header Actions */}
+      <div className="flex flex-wrap items-center gap-3">
+        <Link
+          to="/certificates"
+          className="inline-flex items-center gap-2 bg-[#00bfff] text-black px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(0,191,255,0.35)]"
+        >
+          <span>Explore All Certificates</span>
+          <FaArrowRight size={11} />
+        </Link>
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => scroll('left')}
+            className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/15 text-white flex items-center justify-center hover:bg-[#252525] hover:border-[#00bfff] hover:text-[#00bfff] active:scale-95 transition-all group"
+            aria-label="Scroll Left"
+          >
+            <span className="material-symbols-outlined text-lg group-hover:-translate-x-0.5 transition-transform">
+              arrow_back
+            </span>
+          </button>
+          <button
+            onClick={() => scroll('right')}
+            className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/15 text-white flex items-center justify-center hover:bg-[#252525] hover:border-[#00bfff] hover:text-[#00bfff] active:scale-95 transition-all group"
+            aria-label="Scroll Right"
+          >
+            <span className="material-symbols-outlined text-lg group-hover:translate-x-0.5 transition-transform">
+              arrow_forward
+            </span>
+          </button>
         </div>
       </div>
-    ))}
-  </div>
+    </div>
 
-        {/* Certificate Fullscreen Modal */}
-        {selectedCertificateIndex !== null && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-[4px] p-4"
-            role="dialog"
-            aria-modal="true"
-            onClick={(e) => {
-              if (e.target === e.currentTarget) setSelectedCertificateIndex(null);
-            }}
-          >
-            <div className="w-full h-full max-w-6xl max-h-[90vh]">
-              <div className="flex items-center justify-between mb-4">
-                <div className="text-white">
-                  <div className="text-[#00bfff] text-xs font-bold uppercase tracking-widest">{certificatesData[selectedCertificateIndex]?.category}</div>
-                  <div className="text-lg sm:text-xl font-bold">{certificatesData[selectedCertificateIndex]?.title}</div>
-                </div>
+    {/* Kontainer Slider Sertifikat */}
+    <div
+      ref={certificateContainerRef}
+      className="flex overflow-x-auto gap-6 pb-6 scroll-smooth snap-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      {certificatesData.map((cert, index) => (
+        <div
+          key={cert.id}
+          onClick={() => setSelectedCertificateIndex(index)}
+          className="flex-none w-[88%] sm:w-[48%] lg:w-[32%] snap-start glass-card rounded-[26px] overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_0_25px_rgba(0,191,255,0.2)] flex flex-col justify-between group"
+        >
+          <div>
+            {/* Image Container with Zoom & Hover CTA */}
+            <div className="aspect-[4/3] bg-black/40 overflow-hidden relative">
+              <img
+                src={cert.image}
+                alt={cert.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#111317] via-transparent to-transparent opacity-60" />
 
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    className="w-12 h-12 rounded-xl bg-[#1a1a1a] border border-white/10 text-white flex items-center justify-center hover:bg-[#252525] hover:border-white/20 active:scale-95 transition-all"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedCertificateIndex((prev) => {
-                        if (prev === null) return prev;
-                        return (prev - 1 + certificatesData.length) % certificatesData.length;
-                      });
-                    }}
-                    aria-label="Previous certificate"
-                  >
-                    <span className="material-symbols-outlined">arrow_back</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    className="w-12 h-12 rounded-xl bg-[#1a1a1a] border border-white/10 text-white flex items-center justify-center hover:bg-[#252525] hover:border-white/20 active:scale-95 transition-all"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedCertificateIndex((prev) => {
-                        if (prev === null) return prev;
-                        return (prev + 1) % certificatesData.length;
-                      });
-                    }}
-                    aria-label="Next certificate"
-                  >
-                    <span className="material-symbols-outlined">arrow_forward</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    className="w-12 h-12 rounded-xl bg-[#1a1a1a] border border-white/10 text-white flex items-center justify-center hover:bg-[#252525] hover:border-white/20 active:scale-95 transition-all"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedCertificateIndex(null);
-                    }}
-                    aria-label="Close"
-                  >
-                    <span className="material-symbols-outlined">close</span>
-                  </button>
-                </div>
+              <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span className="inline-flex items-center gap-1.5 bg-[#00bfff] text-black px-4 py-2 rounded-full font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,191,255,0.6)] transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                  <FaEye size={12} />
+                  <span>View Credential</span>
+                </span>
               </div>
 
-              <div className="w-full h-[calc(90vh-110px)] bg-[#0f0f0f] border border-white/10 rounded-2xl overflow-hidden flex items-center justify-center">
-                <img
-                  src={certificatesData[selectedCertificateIndex]?.image}
-                  alt={certificatesData[selectedCertificateIndex]?.title}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-
-              <div className="mt-4 text-gray-300 text-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <div className="truncate">Issued by: {certificatesData[selectedCertificateIndex]?.issuer}</div>
-                <div className="font-mono">{certificatesData[selectedCertificateIndex]?.date}</div>
+              <div className="absolute top-3 left-3 z-10">
+                <span className="bg-black/70 backdrop-blur-md text-[#00bfff] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-[#00bfff]/30">
+                  {cert.category}
+                </span>
               </div>
             </div>
-          </div>
-        )}
 
-        </section>
+            {/* Content */}
+            <div className="p-5">
+              <h3 className="text-white font-bold text-base leading-snug group-hover:text-[#00bfff] transition-colors line-clamp-2 mb-2">
+                {cert.title}
+              </h3>
+              {cert.description && (
+                <p className="text-gray-400 text-xs line-clamp-2 leading-relaxed mb-3">
+                  {cert.description}
+                </p>
+              )}
+              {cert.skills && cert.skills.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {cert.skills.slice(0, 3).map((skill) => (
+                    <span
+                      key={skill}
+                      className="bg-white/5 text-gray-300 text-[10px] px-2 py-0.5 rounded border border-white/5"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                  {cert.skills.length > 3 && (
+                    <span className="text-[10px] text-gray-500 font-mono py-0.5 px-1">
+                      +{cert.skills.length - 3}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="px-5 py-3 border-t border-white/5 flex justify-between items-center text-gray-400 text-xs">
+            <span className="truncate max-w-[65%] font-medium text-gray-300">{cert.issuer}</span>
+            <span className="font-mono text-gray-400">{cert.date}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Certificate Modal Component */}
+    {selectedCertificateIndex !== null && (
+      <CertificateModal
+        certificate={certificatesData[selectedCertificateIndex]}
+        onClose={() => setSelectedCertificateIndex(null)}
+        onPrev={handlePrevCert}
+        onNext={handleNextCert}
+        currentIndex={selectedCertificateIndex}
+        total={certificatesData.length}
+      />
+    )}
+  </section>
 
         {/* Get In Touch Section */}
-    <section className="mb-40 px-4 sm:px-6 md:px-12 lg:px-16 scroll-reveal-target" id="contact">
+    <section className="mb-20 sm:mb-28 lg:mb-40 scroll-reveal-target" id="contact">
       <div className="bg-[#0f0f0f] border border-white/5 rounded-[24px] sm:rounded-[32px] md:rounded-[48px] p-6 sm:p-8 md:p-12 lg:p-16 relative overflow-hidden shadow-2xl">
         <div className="absolute top-0 right-0 w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] bg-[#00bfff]/10 blur-[80px] sm:blur-[100px] md:blur-[120px] -z-10 rounded-full"></div>
 
@@ -898,7 +831,7 @@ Collections of technical validations and personal growth highlights throughout m
   </div>
 </section>
       </main>
-    </>
+    </div>
   );
 }
 
