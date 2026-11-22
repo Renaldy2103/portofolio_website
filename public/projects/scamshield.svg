@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0d14"/>
+      <stop offset="50%" stop-color="#0f1523"/>
+      <stop offset="100%" stop-color="#06090e"/>
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5ff"/>
+      <stop offset="100%" stop-color="#0077b6"/>
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#00e5ff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="radarBloom" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#00e5ff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1200" height="675" fill="url(#bgGrad)"/>
+
+  <!-- Cyber Grid Lines -->
+  <g stroke="#00e5ff" stroke-opacity="0.07" stroke-width="1">
+    <line x1="0" y1="75" x2="1200" y2="75"/>
+    <line x1="0" y1="150" x2="1200" y2="150"/>
+    <line x1="0" y1="225" x2="1200" y2="225"/>
+    <line x1="0" y1="300" x2="1200" y2="300"/>
+    <line x1="0" y1="375" x2="1200" y2="375"/>
+    <line x1="0" y1="450" x2="1200" y2="450"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="0" y1="600" x2="1200" y2="600"/>
+    <line x1="150" y1="0" x2="150" y2="675"/>
+    <line x1="300" y1="0" x2="300" y2="675"/>
+    <line x1="450" y1="0" x2="450" y2="675"/>
+    <line x1="600" y1="0" x2="600" y2="675"/>
+    <line x1="750" y1="0" x2="750" y2="675"/>
+    <line x1="900" y1="0" x2="900" y2="675"/>
+    <line x1="1050" y1="0" x2="1050" y2="675"/>
+  </g>
+
+  <!-- Ambient Glow -->
+  <circle cx="920" cy="337" r="320" fill="url(#radarBloom)"/>
+
+  <!-- Left Content: Typography & Details -->
+  <g transform="translate(100, 140)">
+    <!-- Category Pill -->
+    <rect x="0" y="0" width="180" height="34" rx="17" fill="#00e5ff" fill-opacity="0.12" stroke="#00e5ff" stroke-opacity="0.4" stroke-width="1.5"/>
+    <circle cx="20" cy="17" r="4.5" fill="#10b981"/>
+    <text x="34" y="22" fill="#00e5ff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" letter-spacing="2">MOBILE SECURITY</text>
+
+    <!-- Main Title -->
+    <text x="0" y="95" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="52" font-weight="800" letter-spacing="1">ScamShield 🛡️</text>
+    
+    <!-- Subtitle / Tagline -->
+    <text x="0" y="140" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="500">AI-Powered & Heuristic Mobile Digital Fraud Defense</text>
+
+    <!-- Description highlights -->
+    <text x="0" y="190" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="400">
+      <tspan x="0" dy="0">• Phishing URL & SMS Message Scanner with 0–100 Risk Score</tspan>
+      <tspan x="0" dy="28">• Local-First Heuristic Engine, Zero PII Logging & Offline Resilience</tspan>
+      <tspan x="0" dy="28">• 39 Unit Tests (Jest) • WCAG Accessible Dark/Light Modes</tspan>
+    </text>
+
+    <!-- Technology Badges -->
+    <g transform="translate(0, 300)">
+      <!-- Badge 1: React Native -->
+      <g transform="translate(0, 0)">
+        <rect width="130" height="36" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+        <text x="65" y="23" text-anchor="middle" fill="#38bdf8" font-family="monospace" font-size="12" font-weight="700">REACT NATIVE</text>
+      </g>
+      <!-- Badge 2: Expo SDK 52 -->
+      <g transform="translate(142, 0)">
+        <rect width="125" height="36" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+        <text x="62" y="23" text-anchor="middle" fill="#cbd5e1" font-family="monospace" font-size="12" font-weight="700">EXPO SDK 52</text>
+      </g>
+      <!-- Badge 3: TypeScript -->
+      <g transform="translate(279, 0)">
+        <rect width="120" height="36" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+        <text x="60" y="23" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="12" font-weight="700">TYPESCRIPT</text>
+      </g>
+      <!-- Badge 4: Supabase Edge -->
+      <g transform="translate(411, 0)">
+        <rect width="140" height="36" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+        <text x="70" y="23" text-anchor="middle" fill="#34d399" font-family="monospace" font-size="12" font-weight="700">SUPABASE EDGE</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Right Visual: Mobile Device & Shield Illustration -->
+  <g transform="translate(870, 337)">
+    <!-- Radar concentric rings -->
+    <circle cx="0" cy="0" r="220" fill="none" stroke="#00e5ff" stroke-opacity="0.1" stroke-width="1.5" stroke-dasharray="6 6"/>
+    <circle cx="0" cy="0" r="160" fill="none" stroke="#00e5ff" stroke-opacity="0.18" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="100" fill="none" stroke="#00e5ff" stroke-opacity="0.25" stroke-width="1.5"/>
+
+    <!-- Mobile Screen Outline -->
+    <rect x="-85" y="-150" width="170" height="300" rx="24" fill="#0b111e" stroke="#00e5ff" stroke-width="2.5" filter="url(#glow)"/>
+    <rect x="-40" y="-140" width="80" height="6" rx="3" fill="#1e293b"/>
+
+    <!-- Shield Icon on Screen -->
+    <path d="M0 -70 L55 -40 V15 C55 60 0 95 0 95 C0 95 -55 60 -55 15 V-40 Z" fill="url(#shieldGrad)" fill-opacity="0.2" stroke="#00e5ff" stroke-width="3"/>
+    
+    <!-- Lock / Checkmark inside Shield -->
+    <path d="M-18 8 L-5 22 L22 -7" fill="none" stroke="#00e5ff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Pulse status badge on phone -->
+    <rect x="-65" y="55" width="130" height="28" rx="14" fill="#022c22" stroke="#10b981" stroke-width="1.5"/>
+    <circle cx="-45" cy="69" r="4" fill="#10b981"/>
+    <text x="0" y="74" text-anchor="middle" fill="#6ee7b7" font-family="monospace" font-size="10" font-weight="700">SAFE VERIFIED</text>
+
+    <!-- Floating Risk Pill 1 -->
+    <g transform="translate(-140, -90)">
+      <rect width="110" height="34" rx="8" fill="#141a29" stroke="#ef4444" stroke-opacity="0.6" stroke-width="1.5"/>
+      <circle cx="16" cy="17" r="4" fill="#ef4444"/>
+      <text x="60" y="22" text-anchor="middle" fill="#fca5a5" font-family="monospace" font-size="10" font-weight="700">PHISHING: BLOCKED</text>
+    </g>
+
+    <!-- Floating Risk Pill 2 -->
+    <g transform="translate(70, 110)">
+      <rect width="110" height="34" rx="8" fill="#141a29" stroke="#10b981" stroke-opacity="0.6" stroke-width="1.5"/>
+      <circle cx="16" cy="17" r="4" fill="#10b981"/>
+      <text x="60" y="22" text-anchor="middle" fill="#6ee7b7" font-family="monospace" font-size="10" font-weight="700">PII: REDACTED</text>
+    </g>
+  </g>
+</svg>

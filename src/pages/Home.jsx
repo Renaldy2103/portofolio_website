@@ -22,7 +22,7 @@ function Home() {
   // ==========================================
   // State untuk pagination project
   const [currentPage, setCurrentPage] = useState(0);
-  const cardsPerPage = 2;
+  const cardsPerPage = 3;
   const totalPages = Math.ceil(projects.length / cardsPerPage);
 
   // State & Ref untuk sertifikat
@@ -371,13 +371,15 @@ function Home() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-[2px] bg-[#00bfff] blur-[4px] opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <h3 className="text-white font-bold text-xl mb-6">Backend Development</h3>
           <ul className="space-y-4 font-medium">
+            <li className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors"><img alt="Python" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" /> Python</li>
+            <li className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors"><img alt="FastAPI" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fastapi/fastapi-original.svg" /> FastAPI</li>
+            <li className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors"><img alt="PostgreSQL" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" /> PostgreSQL</li>
             <li className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors"><img alt="Node.js" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" /> Node.js</li>
             <li className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors"><img alt="Laravel" className="w-6 h-6 object-contain" src="https://cdn.simpleicons.org/laravel/FF2D20" /> Laravel</li>
             <li className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg> 
-              REST APIs
+              REST APIs &amp; JWT
             </li>
-            <li className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors"><img alt="JWT" className="w-6 h-6 object-contain" src="https://cdn.simpleicons.org/jsonwebtokens/white" /> JWT</li>
           </ul>
         </div>
 
@@ -400,6 +402,7 @@ function Home() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-[2px] bg-[#00bfff] blur-[4px] opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <h3 className="text-white font-bold text-xl mb-6">Mobile, Game & AI</h3>
           <ul className="space-y-4 font-medium">
+            <li className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors"><img alt="React Native" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" /> React Native (Expo)</li>
             <li className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors"><img alt="Flutter" className="w-6 h-6 object-contain" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg" /> Flutter</li>
             <li className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors"><img alt="Unity" className="w-6 h-6 object-contain" src="https://cdn.simpleicons.org/unity/white" /> Unity</li>
             <li className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors"><img alt="Google Colab" className="w-6 h-6 object-contain" src="https://cdn.simpleicons.org/googlecolab/white" /> Google Colab</li>
@@ -498,7 +501,7 @@ function Home() {
           {Array.from({ length: totalPages }).map((_, pageIndex) => (
             <div
               key={pageIndex}
-              className="min-w-full grid grid-cols-1 lg:grid-cols-2 gap-8"
+              className="min-w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6"
             >
               {projects
                 .slice(
@@ -507,81 +510,123 @@ function Home() {
                 )
                 .map((project, index) => {
                   const globalIndex = pageIndex * cardsPerPage + index;
+                  const isCompleted = project.status ? !project.status.toLowerCase().includes('progress') : true;
+
                   return (
                     <Tilt
                       key={project.id || index}
-                      tiltMaxAngleX={8}
-                      tiltMaxAngleY={8}
-                      perspective={900}
-                      scale={1.02}
+                      tiltMaxAngleX={6}
+                      tiltMaxAngleY={6}
+                      perspective={1000}
+                      scale={1.015}
                       transitionSpeed={400}
                       glareEnable={true}
-                      glareMaxOpacity={0.12}
+                      glareMaxOpacity={0.1}
                       glareColor="#00bfff"
                       glarePosition="all"
-                      glareBorderRadius="32px"
-                      className="rounded-[32px]"
+                      glareBorderRadius="16px"
+                      className="rounded-2xl"
                     >
                     <div
                       onClick={() => setSelectedProjectIndex(globalIndex)}
-                      className="group relative glass-card rounded-[32px] overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-all duration-500 hover:shadow-[0_0_35px_rgba(0,191,255,0.22)] flex flex-col justify-between h-full"
+                      className="group relative glass-card rounded-2xl overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-all duration-300 hover:shadow-[0_0_24px_rgba(0,191,255,0.18)] flex flex-col justify-between h-full bg-[#11141b]/70"
                     >
                       <div>
                         {/* Image Preview with Hover Action */}
-                        <div className="aspect-[16/10] overflow-hidden relative bg-black/40">
+                        <div className="aspect-[16/9] overflow-hidden relative bg-[#0c1017]">
                           <img
                             src={project.image}
                             alt={project.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#111317] via-transparent to-transparent opacity-80" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#11141b] via-transparent to-transparent opacity-70" />
 
                           {/* Hover CTA Button */}
-                          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span className="inline-flex items-center gap-2 bg-[#00bfff] text-black px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,191,255,0.6)] transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300">
-                              <FaEye size={13} />
-                              <span>View Project Details</span>
+                          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                            <span className="inline-flex items-center gap-1.5 bg-[#00bfff] text-black px-3.5 py-1.5 rounded-full font-bold text-[11px] uppercase tracking-wider shadow-[0_0_15px_rgba(0,191,255,0.6)] transform translate-y-1.5 group-hover:translate-y-0 transition-transform duration-200">
+                              <FaEye size={11} />
+                              <span>View Details</span>
                             </span>
                           </div>
 
                           {/* Category Badge */}
-                          <div className="absolute top-4 left-4 z-10">
-                            <span className="bg-black/70 backdrop-blur-md text-[#00bfff] px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-[#00bfff]/30">
+                          <div className="absolute top-3 left-3 z-10">
+                            <span className="bg-black/80 backdrop-blur-md text-[#00bfff] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-[#00bfff]/30">
                               {project.category}
                             </span>
                           </div>
+
+                          {/* Status Badge */}
+                          {project.status && (
+                            <div className="absolute top-3 right-3 z-10">
+                              <span
+                                className={`backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border flex items-center gap-1.5 ${
+                                  isCompleted
+                                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                                    : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                                }`}
+                              >
+                                <span
+                                  className={`w-1.5 h-1.5 rounded-full ${
+                                    isCompleted ? 'bg-emerald-400' : 'bg-amber-400 animate-pulse'
+                                  }`}
+                                />
+                                {project.status}
+                              </span>
+                            </div>
+                          )}
                         </div>
 
                         {/* Card Body */}
-                        <div className="p-6 sm:p-8">
-                          <h3 className="font-title-md text-xl sm:text-2xl text-white group-hover:text-[#00bfff] transition-colors mb-3 line-clamp-1 font-bold">
+                        <div className="p-4 sm:p-5">
+                          <div className="flex items-center justify-between text-[11px] text-gray-500 mb-1.5">
+                            <span className="truncate max-w-[170px]">{project.role || 'Software Project'}</span>
+                            <span className="font-mono text-[10px]">{project.year || '2025'}</span>
+                          </div>
+
+                          <h3 className="font-title-md text-base sm:text-lg text-white group-hover:text-[#00bfff] transition-colors mb-2 line-clamp-1 font-bold">
                             {project.title}
                           </h3>
 
-                          <p className="text-gray-400 mb-6 text-xs sm:text-sm leading-relaxed line-clamp-2">
+                          <p className="text-gray-400 mb-4 text-xs leading-relaxed line-clamp-2">
                             {project.description}
                           </p>
 
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            {project.tech.map((item) => (
+                          <div className="flex flex-wrap gap-1.5">
+                            {project.tech.slice(0, 3).map((item) => (
                               <span
                                 key={item}
-                                className="text-[11px] text-[#00bfff] font-bold tracking-wider flex items-center gap-1.5 bg-[#00bfff]/5 border border-[#00bfff]/20 px-2.5 py-1 rounded-full"
+                                className="text-[10px] text-[#00bfff] font-bold tracking-wider flex items-center gap-1 bg-[#00bfff]/5 border border-[#00bfff]/20 px-2 py-0.5 rounded-md"
                               >
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#00bfff]"></span>
+                                <span className="w-1 h-1 rounded-full bg-[#00bfff]"></span>
                                 {item}
                               </span>
                             ))}
+                            {project.tech.length > 3 && (
+                              <span className="text-[10px] text-gray-500 font-mono py-0.5 px-1">
+                                +{project.tech.length - 3}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
 
                       {/* Card Footer */}
-                      <div className="px-6 sm:px-8 py-4 border-t border-white/5 flex items-center justify-between text-xs">
-                        <span className="text-gray-400 group-hover:text-white transition-colors font-medium flex items-center gap-1">
-                          <span>View project details</span>
-                          <span className="group-hover:translate-x-1 transition-transform">→</span>
-                        </span>
+                      <div className="px-4 sm:px-5 py-3 border-t border-white/5 flex items-center justify-between text-xs gap-2">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProjectIndex(globalIndex);
+                          }}
+                          className="text-[#00bfff] font-bold group-hover:underline flex items-center gap-1 hover:text-white transition-colors text-xs"
+                        >
+                          <span>Details</span>
+                          <span className="text-xs">↗</span>
+                        </button>
 
                         {project.github && (
                           <a
@@ -589,10 +634,12 @@ function Home() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                            className="inline-flex items-center gap-1.5 text-gray-300 hover:text-white bg-white/5 hover:bg-[#00bfff]/20 hover:border-[#00bfff]/40 border border-white/10 px-2.5 py-1 rounded-full transition-all text-[10px] font-semibold"
                             aria-label={`GitHub repo for ${project.title}`}
+                            title={`Open ${project.title} on GitHub`}
                           >
-                            <FaGithub size={18} />
+                            <FaGithub size={12} />
+                            <span>GitHub</span>
                           </a>
                         )}
                       </div>
