@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { scrollToTarget, lockScroll, unlockScroll } from '../lib/smoothScroll';
 import './Navbar.css';
 
 function Navbar() {
@@ -41,9 +42,15 @@ function Navbar() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isHome]);
+
+  useEffect(() => {
+    if (!isMenuOpen) return undefined;
+    lockScroll();
+    return () => unlockScroll();
+  }, [isMenuOpen]);
 
   return (
     <>
@@ -53,7 +60,7 @@ function Navbar() {
         {/* Logo */}
         <Link
           to="/"
-          onClick={() => window.scrollTo(0, 0)}
+          onClick={() => scrollToTarget(0)}
           className="hover:opacity-80 transition-opacity shrink-0"
         >
           <img src="/Logo navbar.png" alt="Renaldy Logo" className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto max-w-[160px] sm:max-w-[200px] md:max-w-none" />
@@ -67,7 +74,7 @@ function Navbar() {
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                window.scrollTo(0, 0);
+                scrollToTarget(0);
               }}
               className={`relative group nav-link ${
                 activeSection === 'home'
@@ -255,7 +262,7 @@ function Navbar() {
                       onClick={(e) => {
                         e.preventDefault();
                         setIsMenuOpen(false);
-                        window.scrollTo(0, 0);
+                        scrollToTarget(0);
                       }}
                       className={`text-sm font-bold uppercase tracking-widest transition-all duration-300 px-4 py-3 rounded-xl ${
                         activeSection === 'home' ? 'text-[#00bfff] bg-[#00bfff]/10' : 'text-gray-300 hover:text-white hover:bg-white/5'
@@ -329,7 +336,7 @@ function Navbar() {
                       to="/"
                       onClick={() => {
                         setIsMenuOpen(false);
-                        window.scrollTo(0, 0);
+                        scrollToTarget(0, { immediate: true });
                       }}
                       className="text-sm font-bold uppercase tracking-widest transition-all duration-300 px-4 py-3 rounded-xl text-white hover:text-[#00bfff] hover:bg-white/5"
                     >

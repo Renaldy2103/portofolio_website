@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@800;900&family=Syne:wght@400;500;600;700;800&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -142,9 +142,14 @@
         will-change: transform;
     }
 
-    html {
-        scroll-behavior: smooth;
-      }
+    /* Word mask helper for GSAP SplitText headings */
+    .split-word-mask {
+        display: inline-block;
+        overflow: hidden;
+        vertical-align: bottom;
+        padding-bottom: 0.08em;
+        margin-bottom: -0.08em;
+    }
 
     /* Responsif untuk background bloom agar tidak mengganggu layar kecil */
 @media (max-width: 640px) {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FaArrowUp } from 'react-icons/fa';
+import { scrollToTarget } from '../lib/smoothScroll';
 
 export default function ScrollProgressTop() {
   const [scrollPercent, setScrollPercent] = useState(0);
@@ -26,10 +27,7 @@ export default function ScrollProgressTop() {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    scrollToTarget(0);
   };
 
   const radius = 18;
