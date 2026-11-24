@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt, FaTimes, FaArrowLeft, FaArrowRight, FaCogs, FaExclamationTriangle, FaBullseye, FaLayerGroup } from 'react-icons/fa';
+import { lockScroll, unlockScroll } from '../lib/smoothScroll';
 
 function ProjectDetailModal({ project, onClose, onPrev, onNext, currentIndex, total }) {
   useEffect(() => {
-    if (!project) return;
+    if (!project) return undefined;
 
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -17,10 +19,12 @@ function ProjectDetailModal({ project, onClose, onPrev, onNext, currentIndex, to
 
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    lockScroll();
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.body.style.overflow = originalOverflow;
+      unlockScroll();
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [project, onClose, onPrev, onNext]);
@@ -30,7 +34,12 @@ function ProjectDetailModal({ project, onClose, onPrev, onNext, currentIndex, to
   const isCompleted = project.status ? !project.status.toLowerCase().includes('progress') : true;
 
   return (
-    <div
+    <motion.div
+      data-lenis-prevent
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.22 }}
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-5 overflow-y-auto"
       role="dialog"
       aria-modal="true"
@@ -39,7 +48,14 @@ function ProjectDetailModal({ project, onClose, onPrev, onNext, currentIndex, to
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative w-full max-w-3xl bg-[#101216] border border-white/15 rounded-2xl sm:rounded-3xl shadow-[0_0_50px_rgba(0,191,255,0.18)] overflow-hidden my-auto flex flex-col max-h-[90vh] transition-all duration-300">
+      <motion.div
+        key={project.id || project.title}
+        initial={{ opacity: 0, scale: 0.94, y: 18 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: 12 }}
+        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+        className="relative w-full max-w-3xl bg-[#101216] border border-white/15 rounded-2xl sm:rounded-3xl shadow-[0_0_50px_rgba(0,191,255,0.18)] overflow-hidden my-auto flex flex-col max-h-[90vh]"
+      >
         
         {/* Modal Top Header */}
         <div className="flex items-center justify-between px-5 sm:px-7 py-4 border-b border-white/10 bg-[#14171d]/90 shrink-0">
@@ -93,7 +109,7 @@ function ProjectDetailModal({ project, onClose, onPrev, onNext, currentIndex, to
         </div>
 
         {/* Modal Scrollable Content */}
-        <div className="overflow-y-auto px-5 sm:px-7 py-5 space-y-5 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-white/10">
+        <div data-lenis-prevent className="overflow-y-auto px-5 sm:px-7 py-5 space-y-5 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-white/10">
           
           {/* Main Visual Banner */}
           {project.image && (
@@ -299,8 +315,8 @@ function ProjectDetailModal({ project, onClose, onPrev, onNext, currentIndex, to
           </div>
         )}
 
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { FaExternalLinkAlt, FaTimes, FaArrowLeft, FaArrowRight, FaCheckCircle } from 'react-icons/fa';
+import { lockScroll, unlockScroll } from '../lib/smoothScroll';
 
 function CertificateModal({ certificate, onClose, onPrev, onNext, currentIndex, total }) {
   useEffect(() => {
-    if (!certificate) return;
+    if (!certificate) return undefined;
 
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -17,10 +19,12 @@ function CertificateModal({ certificate, onClose, onPrev, onNext, currentIndex, 
 
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    lockScroll();
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.body.style.overflow = originalOverflow;
+      unlockScroll();
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [certificate, onClose, onPrev, onNext]);
@@ -28,7 +32,12 @@ function CertificateModal({ certificate, onClose, onPrev, onNext, currentIndex, 
   if (!certificate) return null;
 
   return (
-    <div
+    <motion.div
+      data-lenis-prevent
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.22 }}
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-6 overflow-y-auto"
       role="dialog"
       aria-modal="true"
@@ -37,7 +46,14 @@ function CertificateModal({ certificate, onClose, onPrev, onNext, currentIndex, 
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative w-full max-w-5xl bg-[#101216] border border-white/15 rounded-[28px] sm:rounded-[36px] shadow-[0_0_60px_rgba(0,191,255,0.2)] overflow-hidden my-auto flex flex-col max-h-[94vh] transition-all duration-300">
+      <motion.div
+        key={certificate.id || certificate.title}
+        initial={{ opacity: 0, scale: 0.94, y: 18 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: 12 }}
+        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+        className="relative w-full max-w-5xl bg-[#101216] border border-white/15 rounded-2xl sm:rounded-3xl shadow-[0_0_60px_rgba(0,191,255,0.2)] overflow-hidden my-auto flex flex-col max-h-[94vh]"
+      >
         
         {/* Top Header */}
         <div className="flex items-center justify-between px-6 sm:px-8 py-4 sm:py-5 border-b border-white/10 bg-[#14171d]/90 shrink-0">
@@ -65,7 +81,7 @@ function CertificateModal({ certificate, onClose, onPrev, onNext, currentIndex, 
         </div>
 
         {/* Scrollable Main Area */}
-        <div className="overflow-y-auto px-6 sm:px-8 py-6 space-y-6 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-white/10">
+        <div data-lenis-prevent className="overflow-y-auto px-6 sm:px-8 py-6 space-y-6 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-white/10">
           
           {/* Certificate Image Canvas */}
           <div className="relative w-full min-h-[260px] sm:min-h-[420px] max-h-[58vh] bg-[#08090b] border border-white/10 rounded-2xl overflow-hidden flex items-center justify-center group">
@@ -159,8 +175,8 @@ function CertificateModal({ certificate, onClose, onPrev, onNext, currentIndex, 
           </button>
         </div>
 
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
