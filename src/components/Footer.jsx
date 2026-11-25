@@ -18,7 +18,7 @@ function Footer() {
           {/* Link Sosial Media (Bentuk Teks) */}
           <div className="flex flex-wrap justify-start md:justify-end gap-6 text-sm md:text-base text-[#86a8c3]">
             <a href="https://www.linkedin.com/in/moch-renaldy-syaputra-a19552288/" target="_blank" rel="noopener noreferrer" className="hover:text-[#00bfff] transition-colors">LinkedIn</a>
-            <a href="https://github.com/Renaldy2103/Renaldy2103" className="hover:text-[#00bfff] transition-colors">GitHub</a>
+            <a href="https://github.com/Renaldy2103" target="_blank" rel="noopener noreferrer" className="hover:text-[#00bfff] transition-colors">GitHub</a>
           </div>
 
           {/* Teks Copyright */}

@@ -1,24 +1,32 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@800;900&family=Syne:wght@400;500;600;700;800&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
+    html {
+        @apply font-sans;
+        overflow-x: clip;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+    }
     body {
         background-color: #050505;
         color: #e3e2e8;
-        overflow-x: hidden;
-    @apply bg-background text-foreground;
+        overflow-x: clip;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        @apply bg-background text-foreground;
     }
-  * {
-    @apply border-border outline-ring/50;
-    }
-  html {
-    @apply font-sans;
-    overflow-x: hidden;
+    * {
+        @apply border-border outline-ring/50;
     }
 }
 
