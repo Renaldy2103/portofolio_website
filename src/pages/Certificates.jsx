@@ -2,16 +2,19 @@ import { useState, useMemo, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaArrowLeft, FaSearch, FaEye, FaAward, FaCalendarAlt, FaCheckCircle } from 'react-icons/fa';
+import { Box, LayoutGrid } from 'lucide-react';
 import { certificatesData, certificateFilterTabs } from '../data/certificatesData';
-import CertificateModal from '../components/CertificateModal';
 import SplitHeading from '../components/SplitHeading';
 import MotionCard from '../components/MotionCard';
+import Showcase3DCarousel from '../components/Showcase3DCarousel';
 
 const CyberOrb3D = lazy(() => import('../components/three/CyberOrb3D'));
+const CertificateModal = lazy(() => import('../components/CertificateModal'));
 
 function Certificates() {
   const [activeFilter, setActiveFilter] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState('3d'); // '3d' | 'grid'
   const [selectedCertIndex, setSelectedCertIndex] = useState(null);
 
   const filteredCertificates = useMemo(() => {
@@ -50,7 +53,7 @@ function Certificates() {
   };
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 md:pt-36 pb-24 min-h-[85vh]">
+    <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 md:pt-36 pb-24 min-h-[85vh]">
       {/* Top Breadcrumb & Navigation */}
       <div className="mb-6">
         <Link
@@ -89,7 +92,7 @@ function Certificates() {
             transition={{ duration: 0.5, delay: 0.15 }}
             className="text-gray-400 text-xs sm:text-sm max-w-2xl mt-3 leading-relaxed"
           >
-            Verified certifications, national vocational competencies, and professional credentials across software engineering, artificial intelligence, and industry collaboration.
+            Verified certifications, national vocational competencies, and professional credentials — explore in 3D Stage or Grid mode.
           </motion.p>
         </div>
 
@@ -100,7 +103,7 @@ function Certificates() {
         </div>
       </div>
 
-      {/* Filter and Search Bar */}
+      {/* Filter, Search & 3D/Grid Mode Switcher */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8 pb-5 border-b border-white/10">
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {certificateFilterTabs.map((tab) => {
@@ -135,30 +138,65 @@ function Certificates() {
           })}
         </div>
 
-        <div className="relative w-full lg:w-72">
-          <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search certificates, issuers, skills..."
-            className="w-full bg-[#111317] border border-white/15 focus:border-[#00bfff] rounded-full pl-9 pr-8 py-2 text-xs text-white placeholder-gray-500 outline-none transition-all shadow-inner focus:shadow-[0_0_12px_rgba(0,191,255,0.2)]"
-          />
-          {searchQuery && (
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
+          <div className="relative flex-1 sm:w-64">
+            <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search certificates, skills..."
+              className="w-full bg-[#111317] border border-white/15 focus:border-[#00bfff] rounded-full pl-9 pr-8 py-2 text-xs text-white placeholder-gray-500 outline-none transition-all shadow-inner focus:shadow-[0_0_12px_rgba(0,191,255,0.2)]"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-xs"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          <div
+            role="group"
+            aria-label="Display mode"
+            className="inline-flex items-center rounded-full bg-white/[0.04] border border-white/10 p-1 shrink-0"
+          >
             <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-xs"
+              type="button"
+              onClick={() => setViewMode('3d')}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all ${
+                viewMode === '3d'
+                  ? 'bg-[#00bfff] text-black shadow-[0_0_12px_rgba(0,191,255,0.4)]'
+                  : 'text-slate-400 hover:text-white'
+              }`}
             >
-              ✕
+              <Box className="w-3.5 h-3.5" />
+              <span>3D Stage</span>
             </button>
-          )}
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all ${
+                viewMode === 'grid'
+                  ? 'bg-[#00bfff] text-black shadow-[0_0_12px_rgba(0,191,255,0.4)]'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span>Grid</span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Count Info */}
       <div className="flex items-center justify-between text-xs text-gray-400 mb-6">
         <div>
-          Showing <span className="text-[#00bfff] font-bold">{filteredCertificates.length}</span> of {certificatesData.length} certificates
+          Showing <span className="text-[#00bfff] font-bold">{filteredCertificates.length}</span> of{' '}
+          {certificatesData.length} certificates
         </div>
         {(activeFilter !== 'ALL' || searchQuery) && (
           <button
@@ -173,7 +211,7 @@ function Certificates() {
         )}
       </div>
 
-      {/* Grid */}
+      {/* Display */}
       {filteredCertificates.length === 0 ? (
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -193,6 +231,96 @@ function Certificates() {
             Show All Certificates
           </button>
         </motion.div>
+      ) : viewMode === '3d' ? (
+        <Showcase3DCarousel
+          key={activeFilter + searchQuery}
+          items={filteredCertificates}
+          ariaLabel="Certificates 3D Coverflow"
+          autoPlayInterval={5200}
+          onSelectActive={(idx) => setSelectedCertIndex(idx)}
+          renderCard={(cert, _idx, isCenter) => (
+            <div className="flex flex-col justify-between h-full">
+              <div>
+                <div className="aspect-[16/10] bg-[#080c14] overflow-hidden relative">
+                  <img
+                    src={cert.image}
+                    alt={cert.title}
+                    loading="lazy"
+                    className={`w-full h-full object-cover transition-transform duration-700 ${
+                      isCenter ? 'group-hover:scale-105' : ''
+                    }`}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0d121c] via-black/20 to-transparent opacity-75" />
+
+                  {isCenter && (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/40 backdrop-blur-[2px]">
+                      <span className="inline-flex items-center gap-1.5 bg-[#00bfff] text-black px-4 py-1.5 rounded-full font-bold text-[11px] uppercase tracking-wider shadow-[0_0_18px_rgba(0,191,255,0.65)]">
+                        <FaEye size={12} />
+                        <span>View Credential</span>
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="absolute top-3 left-3 z-10">
+                    <span className="bg-black/80 backdrop-blur-md text-[#00bfff] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-[#00bfff]/30 flex items-center gap-1">
+                      <FaAward size={10} />
+                      {cert.category}
+                    </span>
+                  </div>
+
+                  <div className="absolute top-3 right-3 z-10">
+                    <span className="bg-emerald-500/20 backdrop-blur-md text-emerald-300 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-emerald-500/40 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      Verified
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-4 sm:p-5">
+                  <h3
+                    className={`text-base sm:text-lg font-bold leading-snug mb-2 line-clamp-2 transition-colors ${
+                      isCenter ? 'text-white group-hover:text-[#00bfff]' : 'text-slate-200'
+                    }`}
+                  >
+                    {cert.title}
+                  </h3>
+
+                  {cert.description && (
+                    <p className="text-slate-400 text-xs line-clamp-2 leading-relaxed mb-3">
+                      {cert.description}
+                    </p>
+                  )}
+
+                  {cert.skills && cert.skills.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {cert.skills.slice(0, 3).map((skill) => (
+                        <span
+                          key={skill}
+                          className="bg-white/5 text-slate-300 text-[10px] font-semibold px-2 py-0.5 rounded-md border border-white/10"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                      {cert.skills.length > 3 && (
+                        <span className="text-[10px] text-slate-500 font-mono py-0.5 px-1">
+                          +{cert.skills.length - 3}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="px-4 sm:px-5 py-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
+                <span className="truncate max-w-[65%] font-medium text-slate-300">{cert.issuer}</span>
+                <span className="font-mono text-[11px] text-[#00bfff] flex items-center gap-1">
+                  <FaCalendarAlt size={10} />
+                  {cert.date}
+                </span>
+              </div>
+            </div>
+          )}
+        />
       ) : (
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
           <AnimatePresence mode="popLayout">
@@ -200,12 +328,12 @@ function Certificates() {
               <MotionCard
                 key={cert.id}
                 index={idx}
+                tiltMax={8}
                 layout
                 onClick={() => setSelectedCertIndex(idx)}
                 className="glass-card rounded-2xl overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-colors duration-300 hover:shadow-[0_12px_30px_rgba(0,191,255,0.16)] flex flex-col justify-between h-full bg-[#11141b]/70"
               >
                 <div>
-                  {/* Image Container with Hover Overlay */}
                   <div className="aspect-[4/3] bg-black/40 overflow-hidden relative">
                     <img
                       src={cert.image}
@@ -214,7 +342,6 @@ function Certificates() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#11141b] via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
 
-                    {/* Hover Button */}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/40 backdrop-blur-[2px]">
                       <span className="inline-flex items-center gap-1.5 bg-[#00bfff] text-black px-3.5 py-1.5 rounded-full font-bold text-[11px] uppercase tracking-wider shadow-[0_0_15px_rgba(0,191,255,0.6)] transform translate-y-1.5 group-hover:translate-y-0 transition-transform duration-200">
                         <FaEye size={11} />
@@ -222,7 +349,6 @@ function Certificates() {
                       </span>
                     </div>
 
-                    {/* Top Badge */}
                     <div className="absolute top-3 left-3 z-10">
                       <span className="bg-black/75 backdrop-blur-md text-[#00bfff] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-[#00bfff]/30 flex items-center gap-1">
                         <FaAward size={10} />
@@ -231,7 +357,6 @@ function Certificates() {
                     </div>
                   </div>
 
-                  {/* Body Content */}
                   <div className="p-4 sm:p-5">
                     <div className="flex items-center gap-1.5 text-[11px] text-[#00bfff] font-bold uppercase tracking-wider mb-1.5">
                       <FaCheckCircle size={11} />
@@ -248,7 +373,6 @@ function Certificates() {
                       </p>
                     )}
 
-                    {/* Skills Preview */}
                     {cert.skills && cert.skills.length > 0 && (
                       <div className="flex flex-wrap gap-1.5">
                         {cert.skills.slice(0, 3).map((skill) => (
@@ -269,11 +393,8 @@ function Certificates() {
                   </div>
                 </div>
 
-                {/* Footer */}
                 <div className="px-4 sm:px-5 py-3 border-t border-white/5 flex items-center justify-between text-xs text-gray-400">
-                  <span className="truncate max-w-[65%] font-medium text-gray-300">
-                    {cert.issuer}
-                  </span>
+                  <span className="truncate max-w-[65%] font-medium text-gray-300">{cert.issuer}</span>
                   <span className="font-mono text-[11px] flex items-center gap-1">
                     <FaCalendarAlt size={10} className="text-gray-500" />
                     {cert.date}
@@ -288,14 +409,16 @@ function Certificates() {
       {/* Certificate Modal */}
       <AnimatePresence>
         {activeCert && (
-          <CertificateModal
-            certificate={activeCert}
-            onClose={() => setSelectedCertIndex(null)}
-            onPrev={handlePrev}
-            onNext={handleNext}
-            currentIndex={selectedCertIndex}
-            total={filteredCertificates.length}
-          />
+          <Suspense fallback={null}>
+            <CertificateModal
+              certificate={activeCert}
+              onClose={() => setSelectedCertIndex(null)}
+              onPrev={handlePrev}
+              onNext={handleNext}
+              currentIndex={selectedCertIndex}
+              total={filteredCertificates.length}
+            />
+          </Suspense>
         )}
       </AnimatePresence>
     </main>

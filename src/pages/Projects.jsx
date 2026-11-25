@@ -2,19 +2,21 @@ import { useState, useMemo, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaGithub, FaSearch, FaArrowLeft, FaEye } from 'react-icons/fa';
+import { Box, LayoutGrid } from 'lucide-react';
 import { projectsData, projectFilterTabs } from '../data/projectsData';
-import ProjectDetailModal from '../components/ProjectDetailModal';
 import SplitHeading from '../components/SplitHeading';
 import MotionCard from '../components/MotionCard';
+import Showcase3DCarousel from '../components/Showcase3DCarousel';
 
 const CyberOrb3D = lazy(() => import('../components/three/CyberOrb3D'));
+const ProjectDetailModal = lazy(() => import('../components/ProjectDetailModal'));
 
 function Projects() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState('3d'); // '3d' | 'grid'
   const [selectedProjectIndex, setSelectedProjectIndex] = useState(null);
 
-  // Filter & Search logic
   const filteredProjects = useMemo(() => {
     return projectsData.filter((project) => {
       const matchesFilter =
@@ -52,8 +54,7 @@ function Projects() {
   };
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 md:pt-36 pb-24 min-h-[85vh]">
-      
+    <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 md:pt-36 pb-24 min-h-[85vh]">
       {/* Top Breadcrumb & Navigation */}
       <div className="mb-6">
         <Link
@@ -92,7 +93,7 @@ function Projects() {
             transition={{ duration: 0.5, delay: 0.15 }}
             className="text-gray-400 text-xs sm:text-sm max-w-2xl mt-3 leading-relaxed"
           >
-            A curated engineering showcase of backend architectures, mobile applications, AI/ML pipelines, and full-stack solutions designed with robust production practices.
+            A curated engineering showcase of backend architectures, mobile applications, AI/ML pipelines, and full-stack solutions — explore in 3D Stage or Grid mode.
           </motion.p>
         </div>
 
@@ -103,10 +104,9 @@ function Projects() {
         </div>
       </div>
 
-      {/* Controls Bar: Filter Tabs & Search */}
+      {/* Controls Bar: Filter Tabs, Search & 3D/Grid Switcher */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8 pb-5 border-b border-white/10">
-        
-        {/* Filter Tabs with Motion sliding pill */}
+        {/* Filter Tabs */}
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {projectFilterTabs.map((tab) => {
             const count =
@@ -141,32 +141,66 @@ function Projects() {
           })}
         </div>
 
-        {/* Search Bar */}
-        <div className="relative w-full lg:w-72">
-          <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search projects, stack..."
-            className="w-full bg-[#111317] border border-white/15 focus:border-[#00bfff] rounded-full pl-9 pr-8 py-2 text-xs text-white placeholder-gray-500 outline-none transition-all shadow-inner focus:shadow-[0_0_12px_rgba(0,191,255,0.2)]"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-xs"
-            >
-              ✕
-            </button>
-          )}
-        </div>
+        {/* Search + View Mode Switcher */}
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
+          <div className="relative flex-1 sm:w-64">
+            <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search projects, stack..."
+              className="w-full bg-[#111317] border border-white/15 focus:border-[#00bfff] rounded-full pl-9 pr-8 py-2 text-xs text-white placeholder-gray-500 outline-none transition-all shadow-inner focus:shadow-[0_0_12px_rgba(0,191,255,0.2)]"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-xs"
+              >
+                ✕
+              </button>
+            )}
+          </div>
 
+          <div
+            role="group"
+            aria-label="Display mode"
+            className="inline-flex items-center rounded-full bg-white/[0.04] border border-white/10 p-1 shrink-0"
+          >
+            <button
+              type="button"
+              onClick={() => setViewMode('3d')}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all ${
+                viewMode === '3d'
+                  ? 'bg-[#00bfff] text-black shadow-[0_0_12px_rgba(0,191,255,0.4)]'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Box className="w-3.5 h-3.5" />
+              <span>3D Stage</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all ${
+                viewMode === 'grid'
+                  ? 'bg-[#00bfff] text-black shadow-[0_0_12px_rgba(0,191,255,0.4)]'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span>Grid</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Count Indicator */}
       <div className="flex items-center justify-between text-xs text-gray-400 mb-6">
         <div>
-          Showing <span className="text-[#00bfff] font-bold">{filteredProjects.length}</span> of {projectsData.length} projects
+          Showing <span className="text-[#00bfff] font-bold">{filteredProjects.length}</span> of{' '}
+          {projectsData.length} projects
         </div>
         {(activeFilter !== 'all' || searchQuery) && (
           <button
@@ -181,7 +215,7 @@ function Projects() {
         )}
       </div>
 
-      {/* Projects Grid */}
+      {/* Projects Display */}
       {filteredProjects.length === 0 ? (
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -201,21 +235,147 @@ function Projects() {
             Show All Projects
           </button>
         </motion.div>
+      ) : viewMode === '3d' ? (
+        <Showcase3DCarousel
+          key={activeFilter + searchQuery}
+          items={filteredProjects}
+          ariaLabel="Projects 3D Coverflow"
+          onSelectActive={(idx) => setSelectedProjectIndex(idx)}
+          renderCard={(project, _idx, isCenter) => {
+            const isCompleted = project.status
+              ? !project.status.toLowerCase().includes('progress')
+              : true;
+
+            return (
+              <div className="flex flex-col justify-between h-full">
+                <div>
+                  <div className="aspect-[16/9] overflow-hidden relative bg-[#090d16]">
+                    {project.image ? (
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                        className={`w-full h-full object-cover transition-transform duration-700 ${
+                          isCenter ? 'group-hover:scale-105' : ''
+                        }`}
+                      />
+                    ) : null}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d121c] via-black/15 to-transparent opacity-80" />
+
+                    {isCenter && (
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/40 backdrop-blur-[2px]">
+                        <span className="inline-flex items-center gap-1.5 bg-[#00bfff] text-black px-4 py-1.5 rounded-full font-bold text-[11px] uppercase tracking-wider shadow-[0_0_18px_rgba(0,191,255,0.65)]">
+                          <FaEye size={12} />
+                          <span>View Details</span>
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="absolute top-3 left-3 z-10">
+                      <span className="bg-black/80 backdrop-blur-md text-[#00bfff] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-[#00bfff]/30">
+                        {project.category}
+                      </span>
+                    </div>
+
+                    {project.status && (
+                      <div className="absolute top-3 right-3 z-10">
+                        <span
+                          className={`backdrop-blur-md px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border flex items-center gap-1.5 ${
+                            isCompleted
+                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                              : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                          }`}
+                        >
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              isCompleted ? 'bg-emerald-400' : 'bg-amber-400 animate-pulse'
+                            }`}
+                          />
+                          {project.status}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-4 sm:p-5">
+                    <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
+                      <span className="truncate max-w-[190px]">{project.role || 'Software Project'}</span>
+                      <span className="font-mono text-[10px] text-slate-500">{project.year || '2025'}</span>
+                    </div>
+
+                    <h3
+                      className={`text-base sm:text-lg font-bold mb-1.5 line-clamp-1 transition-colors ${
+                        isCenter ? 'text-white group-hover:text-[#00bfff]' : 'text-slate-200'
+                      }`}
+                    >
+                      {project.title}
+                    </h3>
+
+                    <p className="text-slate-400 text-xs line-clamp-2 mb-3.5 leading-relaxed">
+                      {project.description}
+                    </p>
+
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.tech.slice(0, 3).map((item) => (
+                        <span
+                          key={item}
+                          className="bg-[#00bfff]/8 text-[#00bfff] text-[10px] font-bold px-2 py-0.5 rounded-md border border-[#00bfff]/25"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                      {project.tech.length > 3 && (
+                        <span className="text-[10px] text-slate-500 font-mono py-0.5 px-1">
+                          +{project.tech.length - 3}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="px-4 sm:px-5 py-3 border-t border-white/[0.06] flex items-center justify-between text-xs gap-2">
+                  <span className="text-[#00bfff] font-bold flex items-center gap-1 text-xs">
+                    <span>{isCenter ? 'View Details' : 'Click to Focus'}</span>
+                    <span>↗</span>
+                  </span>
+
+                  {project.github && isCenter && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="relative z-30 inline-flex items-center gap-1.5 text-slate-200 hover:text-white bg-white/5 hover:bg-[#00bfff]/20 hover:border-[#00bfff]/50 border border-white/10 px-3 py-1 rounded-full transition-all text-[10px] font-semibold"
+                    >
+                      <FaGithub size={12} />
+                      <span>GitHub</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            );
+          }}
+        />
       ) : (
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project, idx) => {
-              const isCompleted = project.status ? !project.status.toLowerCase().includes('progress') : true;
+              const isCompleted = project.status
+                ? !project.status.toLowerCase().includes('progress')
+                : true;
 
               return (
                 <MotionCard
                   key={project.id || project.title}
                   index={idx}
+                  tiltMax={8}
                   layout
                   onClick={() => setSelectedProjectIndex(idx)}
                   className="glass-card rounded-2xl overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-colors duration-300 hover:shadow-[0_12px_30px_rgba(0,191,255,0.16)] flex flex-col h-full bg-[#11141b]/70"
                 >
-                  {/* Image Preview with Hover Overlay */}
                   <div className="aspect-[16/9] overflow-hidden relative bg-[#0c1017]">
                     {project.image ? (
                       <img
@@ -228,14 +388,14 @@ function Projects() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#121620] to-[#0a0d14] p-4 text-center">
-                        <span className="text-[#00bfff] font-bold text-xs tracking-wider uppercase">{project.title}</span>
+                        <span className="text-[#00bfff] font-bold text-xs tracking-wider uppercase">
+                          {project.title}
+                        </span>
                       </div>
                     )}
 
-                    {/* Cyber Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#11141b] via-black/20 to-transparent opacity-70 group-hover:opacity-40 transition-opacity" />
 
-                    {/* Hover CTA Pill */}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/40 backdrop-blur-[2px]">
                       <span className="inline-flex items-center gap-1.5 bg-[#00bfff] text-black px-3.5 py-1.5 rounded-full font-bold text-[11px] uppercase tracking-wider shadow-[0_0_15px_rgba(0,191,255,0.6)] transform translate-y-1.5 group-hover:translate-y-0 transition-transform duration-200">
                         <FaEye size={11} />
@@ -243,14 +403,12 @@ function Projects() {
                       </span>
                     </div>
 
-                    {/* Top Corner Category Badge */}
                     <div className="absolute top-3 left-3 z-10">
                       <span className="bg-black/80 backdrop-blur-md text-[#00bfff] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-[#00bfff]/30">
                         {project.category}
                       </span>
                     </div>
 
-                    {/* Top Corner Status Badge */}
                     {project.status && (
                       <div className="absolute top-3 right-3 z-10">
                         <span
@@ -271,7 +429,6 @@ function Projects() {
                     )}
                   </div>
 
-                  {/* Card Body */}
                   <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between text-[11px] text-gray-500 mb-1.5">
@@ -289,7 +446,6 @@ function Projects() {
                     </div>
 
                     <div>
-                      {/* Tech Stack Chips */}
                       <div className="flex flex-wrap gap-1.5 mb-4">
                         {project.tech.slice(0, 3).map((item) => (
                           <span
@@ -306,7 +462,6 @@ function Projects() {
                         )}
                       </div>
 
-                      {/* Card Bottom Actions */}
                       <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs gap-2">
                         <button
                           type="button"
@@ -335,7 +490,6 @@ function Projects() {
                         )}
                       </div>
                     </div>
-
                   </div>
                 </MotionCard>
               );
@@ -347,17 +501,18 @@ function Projects() {
       {/* Project Detail Modal */}
       <AnimatePresence>
         {activeProject && (
-          <ProjectDetailModal
-            project={activeProject}
-            onClose={() => setSelectedProjectIndex(null)}
-            onPrev={handlePrevProject}
-            onNext={handleNextProject}
-            currentIndex={selectedProjectIndex}
-            total={filteredProjects.length}
-          />
+          <Suspense fallback={null}>
+            <ProjectDetailModal
+              project={activeProject}
+              onClose={() => setSelectedProjectIndex(null)}
+              onPrev={handlePrevProject}
+              onNext={handleNextProject}
+              currentIndex={selectedProjectIndex}
+              total={filteredProjects.length}
+            />
+          </Suspense>
         )}
       </AnimatePresence>
-
     </main>
   );
 }

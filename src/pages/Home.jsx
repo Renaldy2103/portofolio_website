@@ -2,21 +2,22 @@ import { useRef, useState, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaGithub, FaEye, FaArrowRight } from 'react-icons/fa';
-import emailjs from '@emailjs/browser';
 import Elias from '@/components/ui/elias-author-hero';
 import LogoLoop from '../components/LogoLoop';
 import JourneyTimeline from '../components/JourneyTimeline';
 import SplitHeading from '../components/SplitHeading';
 import MotionCard from '../components/MotionCard';
 import MagneticButton from '../components/MagneticButton';
+import Showcase3DCarousel from '../components/Showcase3DCarousel';
+import LazyViewport from '../components/LazyViewport';
 import { projectsData } from '../data/projectsData';
 import { certificatesData } from '../data/certificatesData';
-import ProjectDetailModal from '../components/ProjectDetailModal';
-import CertificateModal from '../components/CertificateModal';
 import useMediaQuery from '../hooks/useMediaQuery';
 
 const TechGlobe3D = lazy(() => import('../components/three/TechGlobe3D'));
 const CyberOrb3D = lazy(() => import('../components/three/CyberOrb3D'));
+const ProjectDetailModal = lazy(() => import('../components/ProjectDetailModal'));
+const CertificateModal = lazy(() => import('../components/CertificateModal'));
 
 const HERO_CASE_BOOKS = [
   {
@@ -84,17 +85,7 @@ const HERO_BUILD_LETTER = {
 function Home() {
   const projects = projectsData;
 
-  const isLg = useMediaQuery('(min-width: 1024px)');
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
-
-  // Responsive Project slider pagination (3 desktop, 2 tablet)
-  const [currentPage, setCurrentPage] = useState(0);
-  const cardsPerPage = isLg ? 3 : 2;
-  const totalPages = Math.ceil(projects.length / cardsPerPage);
-  const activeSlide = Math.min(currentPage, totalPages - 1);
-
-  // Certificates horizontal scroll container
-  const certificateContainerRef = useRef(null);
 
   // EmailJS contact form state
   const form = useRef(null);
@@ -104,20 +95,6 @@ function Home() {
   // Modal state for Project & Certificate details
   const [selectedProjectIndex, setSelectedProjectIndex] = useState(null);
   const [selectedCertificateIndex, setSelectedCertificateIndex] = useState(null);
-
-  const nextSlide = () => {
-    setCurrentPage((prev) => {
-      const clamped = Math.min(prev, totalPages - 1);
-      return clamped < totalPages - 1 ? clamped + 1 : clamped;
-    });
-  };
-
-  const prevSlide = () => {
-    setCurrentPage((prev) => {
-      const clamped = Math.min(prev, totalPages - 1);
-      return clamped > 0 ? clamped - 1 : 0;
-    });
-  };
 
   const handlePrevProject = () => {
     setSelectedProjectIndex((prev) => {
@@ -147,32 +124,26 @@ function Home() {
     });
   };
 
-  const scroll = (direction) => {
-    if (certificateContainerRef.current) {
-      const { scrollLeft, clientWidth } = certificateContainerRef.current;
-      const scrollTo = direction === 'left' ? scrollLeft - clientWidth : scrollLeft + clientWidth;
-      certificateContainerRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
-    }
-  };
-
-  const sendEmail = (e) => {
+  const sendEmail = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    emailjs
-      .sendForm('service_r56up9s', 'template_jbyg2as', form.current, 'pHjP0kFkJyJPehZYM')
-      .then(
-        () => {
-          setSubmitStatus('success');
-          form.current.reset();
-          setIsSubmitting(false);
-          setTimeout(() => setSubmitStatus(null), 5000);
-        },
-        () => {
-          setSubmitStatus('error');
-          setIsSubmitting(false);
-        }
+    try {
+      const { default: emailjs } = await import('@emailjs/browser');
+      await emailjs.sendForm(
+        'service_r56up9s',
+        'template_jbyg2as',
+        form.current,
+        'pHjP0kFkJyJPehZYM'
       );
+      setSubmitStatus('success');
+      form.current?.reset();
+      setIsSubmitting(false);
+      setTimeout(() => setSubmitStatus(null), 5000);
+    } catch {
+      setSubmitStatus('error');
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -362,19 +333,27 @@ function Home() {
             ariaLabel="Tech stack logos"
           />
 
-          {/* 3D Orbiting Tech Stack Globe (#3) */}
+          {/* 3D Orbiting Tech Stack Globe (#3) — network-loaded only near viewport */}
           {!prefersReducedMotion && (
-            <div className="mt-12">
+            <LazyViewport
+              rootMargin="360px"
+              className="mt-12"
+              fallback={
+                <div className="w-full h-[280px] sm:h-[360px] md:h-[400px] rounded-2xl sm:rounded-3xl glass-card border border-white/10 flex items-center justify-center text-xs font-mono text-gray-400">
+                  INITIALIZING 3D TECH GLOBE...
+                </div>
+              }
+            >
               <Suspense
                 fallback={
-                  <div className="w-full h-[360px] rounded-3xl glass-card border border-white/10 flex items-center justify-center text-xs font-mono text-gray-400">
+                  <div className="w-full h-[280px] sm:h-[360px] md:h-[400px] rounded-2xl sm:rounded-3xl glass-card border border-white/10 flex items-center justify-center text-xs font-mono text-gray-400">
                     INITIALIZING 3D TECH GLOBE...
                   </div>
                 }
               >
                 <TechGlobe3D />
               </Suspense>
-            </div>
+            </LazyViewport>
           )}
 
           {/* Tech Stack Categorized Motion Cards */}
@@ -512,55 +491,23 @@ function Home() {
                 <FaGithub size={14} />
                 <span>GitHub</span>
               </a>
-
-              <div className="hidden md:flex items-center gap-2 ml-1">
-                <span className="text-xs font-mono text-gray-400 mr-1">
-                  {activeSlide + 1}/{totalPages}
-                </span>
-                <button
-                  onClick={prevSlide}
-                  disabled={activeSlide === 0}
-                  className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all ${
-                    activeSlide === 0
-                      ? 'border-white/5 text-gray-600 cursor-not-allowed'
-                      : 'border-white/15 text-white hover:border-[#00bfff] hover:text-[#00bfff] hover:bg-[#00bfff]/10'
-                  }`}
-                  aria-label="Previous Projects"
-                >
-                  <span className="material-symbols-outlined text-base">arrow_back</span>
-                </button>
-
-                <button
-                  onClick={nextSlide}
-                  disabled={activeSlide >= totalPages - 1}
-                  className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all ${
-                    activeSlide >= totalPages - 1
-                      ? 'border-white/5 text-gray-600 cursor-not-allowed'
-                      : 'border-white/15 text-white hover:border-[#00bfff] hover:text-[#00bfff] hover:bg-[#00bfff]/10'
-                  }`}
-                  aria-label="Next Projects"
-                >
-                  <span className="material-symbols-outlined text-base">arrow_forward</span>
-                </button>
-              </div>
             </div>
           </div>
 
-          {/* MOBILE HORIZONTAL SNAP CAROUSEL (< 768px) */}
-          <div className="md:hidden flex overflow-x-auto gap-4 pb-4 pt-1 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {projects.slice(0, 6).map((project, index) => {
+          {/* 3D PERSPECTIVE COVERFLOW SHOWCASE FOR WORK */}
+          <Showcase3DCarousel
+            items={projects}
+            ariaLabel="Featured Projects 3D Showcase"
+            onSelectActive={(idx) => setSelectedProjectIndex(idx)}
+            renderCard={(project, idx, isCenter) => {
               const isCompleted = project.status
                 ? !project.status.toLowerCase().includes('progress')
                 : true;
+
               return (
-                <MotionCard
-                  key={project.id || index}
-                  index={index}
-                  onClick={() => setSelectedProjectIndex(index)}
-                  className="flex-none w-[85%] snap-start glass-card rounded-2xl overflow-hidden cursor-pointer border border-white/10 flex flex-col justify-between bg-[#11141b]/80"
-                >
+                <div className="flex flex-col justify-between h-full">
                   <div>
-                    <div className="aspect-[16/9] overflow-hidden relative bg-[#0c1017]">
+                    <div className="aspect-[16/9] overflow-hidden relative bg-[#090d16]">
                       <img
                         src={project.image}
                         alt={project.title}
@@ -568,18 +515,31 @@ function Home() {
                         onError={(e) => {
                           e.currentTarget.style.display = 'none';
                         }}
-                        className="w-full h-full object-cover"
+                        className={`w-full h-full object-cover transition-transform duration-700 ${
+                          isCenter ? 'group-hover:scale-105' : ''
+                        }`}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#11141b] via-transparent to-transparent opacity-75" />
-                      <div className="absolute top-2.5 left-2.5 z-10">
-                        <span className="bg-black/80 backdrop-blur-md text-[#00bfff] px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-[#00bfff]/30">
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0d121c] via-black/15 to-transparent opacity-80" />
+
+                      {isCenter && (
+                        <div className="absolute inset-0 bg-black/35 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                          <span className="inline-flex items-center gap-1.5 bg-[#00bfff] text-black px-4 py-1.5 rounded-full font-bold text-[11px] uppercase tracking-wider shadow-[0_0_18px_rgba(0,191,255,0.65)]">
+                            <FaEye size={12} />
+                            <span>View Case Study</span>
+                          </span>
+                        </div>
+                      )}
+
+                      <div className="absolute top-3 left-3 z-10">
+                        <span className="bg-black/80 backdrop-blur-md text-[#00bfff] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-[#00bfff]/30">
                           {project.category}
                         </span>
                       </div>
+
                       {project.status && (
-                        <div className="absolute top-2.5 right-2.5 z-10">
+                        <div className="absolute top-3 right-3 z-10">
                           <span
-                            className={`backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border flex items-center gap-1 ${
+                            className={`backdrop-blur-md px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border flex items-center gap-1.5 ${
                               isCompleted
                                 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                                 : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
@@ -595,207 +555,91 @@ function Home() {
                         </div>
                       )}
                     </div>
-                    <div className="p-4">
-                      <div className="flex items-center justify-between text-[10px] text-gray-500 mb-1">
-                        <span className="truncate max-w-[160px]">{project.role || 'Software Project'}</span>
-                        <span className="font-mono">{project.year || '2025'}</span>
+
+                    <div className="p-4 sm:p-5">
+                      <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
+                        <span className="truncate max-w-[200px]">
+                          {project.role || 'Software Project'}
+                        </span>
+                        <span className="font-mono text-[10px] text-slate-500">
+                          {project.year || '2025'}
+                        </span>
                       </div>
-                      <h3 className="text-base text-white font-bold mb-1.5 line-clamp-1">{project.title}</h3>
-                      <p className="text-gray-400 mb-3 text-xs leading-relaxed line-clamp-2">
+
+                      <h3
+                        className={`text-base sm:text-lg font-bold mb-1.5 line-clamp-1 transition-colors ${
+                          isCenter ? 'text-white group-hover:text-[#00bfff]' : 'text-slate-200'
+                        }`}
+                      >
+                        {project.title}
+                      </h3>
+
+                      <p className="text-slate-400 mb-3.5 text-xs leading-relaxed line-clamp-2">
                         {project.description}
                       </p>
-                      <div className="flex flex-wrap gap-1">
+
+                      <div className="flex flex-wrap gap-1.5">
                         {project.tech.slice(0, 3).map((item) => (
                           <span
                             key={item}
-                            className="text-[9px] text-[#00bfff] font-bold bg-[#00bfff]/5 border border-[#00bfff]/20 px-2 py-0.5 rounded-md"
+                            className="text-[10px] text-[#00bfff] font-bold tracking-wider flex items-center gap-1 bg-[#00bfff]/8 border border-[#00bfff]/25 px-2 py-0.5 rounded-md"
                           >
+                            <span className="w-1 h-1 rounded-full bg-[#00bfff]" />
                             {item}
                           </span>
                         ))}
+                        {project.tech.length > 3 && (
+                          <span className="text-[10px] text-slate-500 font-mono py-0.5 px-1">
+                            +{project.tech.length - 3}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
-                  <div className="px-4 py-2.5 border-t border-white/5 flex items-center justify-between text-xs">
-                    <span className="text-[#00bfff] font-bold text-xs">Details ↗</span>
-                    {project.github && (
+
+                  <div className="px-4 sm:px-5 py-3 border-t border-white/[0.06] flex items-center justify-between text-xs gap-2">
+                    <span className="text-[#00bfff] font-bold flex items-center gap-1 text-xs">
+                      <span>{isCenter ? 'View Details' : 'Click to Focus'}</span>
+                      <span>↗</span>
+                    </span>
+
+                    {project.github && isCenter && (
                       <a
                         href={project.github}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center gap-1 text-gray-300 bg-white/5 border border-white/10 px-2.5 py-1 rounded-full text-[10px] font-semibold"
+                        className="relative z-30 inline-flex items-center gap-1.5 text-slate-200 hover:text-white bg-white/5 hover:bg-[#00bfff]/20 hover:border-[#00bfff]/50 border border-white/10 px-3 py-1 rounded-full transition-all text-[10px] font-semibold"
+                        aria-label={`GitHub repo for ${project.title}`}
                       >
-                        <FaGithub size={11} />
+                        <FaGithub size={12} />
                         <span>GitHub</span>
                       </a>
                     )}
                   </div>
-                </MotionCard>
-              );
-            })}
-          </div>
-
-          {/* TABLET & DESKTOP SLIDER (>= 768px) */}
-          <div className="hidden md:block overflow-hidden py-2">
-            <div
-              className="flex transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
-              style={{
-                transform: `translateX(-${activeSlide * 100}%)`,
-              }}
-            >
-              {Array.from({ length: totalPages }).map((_, pageIndex) => (
-                <div
-                  key={pageIndex}
-                  className="min-w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 px-0.5"
-                >
-                  {projects
-                    .slice(pageIndex * cardsPerPage, pageIndex * cardsPerPage + cardsPerPage)
-                    .map((project, index) => {
-                      const globalIndex = pageIndex * cardsPerPage + index;
-                      const isCompleted = project.status
-                        ? !project.status.toLowerCase().includes('progress')
-                        : true;
-
-                      return (
-                        <MotionCard
-                          key={project.id || index}
-                          index={index}
-                          onClick={() => setSelectedProjectIndex(globalIndex)}
-                          className="glass-card rounded-2xl overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-colors duration-300 hover:shadow-[0_12px_30px_rgba(0,191,255,0.16)] flex flex-col justify-between h-full bg-[#11141b]/70"
-                        >
-                          <div>
-                            <div className="aspect-[16/9] overflow-hidden relative bg-[#0c1017]">
-                              <img
-                                src={project.image}
-                                alt={project.title}
-                                onError={(e) => {
-                                  e.currentTarget.style.display = 'none';
-                                }}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-[#11141b] via-transparent to-transparent opacity-70" />
-
-                              <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                                <span className="inline-flex items-center gap-1.5 bg-[#00bfff] text-black px-3.5 py-1.5 rounded-full font-bold text-[11px] uppercase tracking-wider shadow-[0_0_15px_rgba(0,191,255,0.6)] transform translate-y-1.5 group-hover:translate-y-0 transition-transform duration-200">
-                                  <FaEye size={11} />
-                                  <span>View Details</span>
-                                </span>
-                              </div>
-
-                              <div className="absolute top-3 left-3 z-10">
-                                <span className="bg-black/80 backdrop-blur-md text-[#00bfff] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-[#00bfff]/30">
-                                  {project.category}
-                                </span>
-                              </div>
-
-                              {project.status && (
-                                <div className="absolute top-3 right-3 z-10">
-                                  <span
-                                    className={`backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border flex items-center gap-1.5 ${
-                                      isCompleted
-                                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                                        : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                                    }`}
-                                  >
-                                    <span
-                                      className={`w-1.5 h-1.5 rounded-full ${
-                                        isCompleted ? 'bg-emerald-400' : 'bg-amber-400 animate-pulse'
-                                      }`}
-                                    />
-                                    {project.status}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-
-                            <div className="p-4 sm:p-5">
-                              <div className="flex items-center justify-between text-[11px] text-gray-500 mb-1.5">
-                                <span className="truncate max-w-[170px]">
-                                  {project.role || 'Software Project'}
-                                </span>
-                                <span className="font-mono text-[10px]">{project.year || '2025'}</span>
-                              </div>
-
-                              <h3 className="font-title-md text-base sm:text-lg text-white group-hover:text-[#00bfff] transition-colors mb-2 line-clamp-1 font-bold">
-                                {project.title}
-                              </h3>
-
-                              <p className="text-gray-400 mb-4 text-xs leading-relaxed line-clamp-2">
-                                {project.description}
-                              </p>
-
-                              <div className="flex flex-wrap gap-1.5">
-                                {project.tech.slice(0, 3).map((item) => (
-                                  <span
-                                    key={item}
-                                    className="text-[10px] text-[#00bfff] font-bold tracking-wider flex items-center gap-1 bg-[#00bfff]/5 border border-[#00bfff]/20 px-2 py-0.5 rounded-md"
-                                  >
-                                    <span className="w-1 h-1 rounded-full bg-[#00bfff]"></span>
-                                    {item}
-                                  </span>
-                                ))}
-                                {project.tech.length > 3 && (
-                                  <span className="text-[10px] text-gray-500 font-mono py-0.5 px-1">
-                                    +{project.tech.length - 3}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="px-4 sm:px-5 py-3 border-t border-white/5 flex items-center justify-between text-xs gap-2">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedProjectIndex(globalIndex);
-                              }}
-                              className="text-[#00bfff] font-bold group-hover:underline flex items-center gap-1 hover:text-white transition-colors text-xs"
-                            >
-                              <span>Details</span>
-                              <span className="text-xs">↗</span>
-                            </button>
-
-                            {project.github && (
-                              <a
-                                href={project.github}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
-                                className="inline-flex items-center gap-1.5 text-gray-300 hover:text-white bg-white/5 hover:bg-[#00bfff]/20 hover:border-[#00bfff]/40 border border-white/10 px-2.5 py-1 rounded-full transition-all text-[10px] font-semibold"
-                                aria-label={`GitHub repo for ${project.title}`}
-                                title={`Open ${project.title} on GitHub`}
-                              >
-                                <FaGithub size={12} />
-                                <span>GitHub</span>
-                              </a>
-                            )}
-                          </div>
-                        </MotionCard>
-                      );
-                    })}
                 </div>
-              ))}
-            </div>
-          </div>
+              );
+            }}
+          />
 
           <AnimatePresence>
             {selectedProjectIndex !== null && (
-              <ProjectDetailModal
-                project={projects[selectedProjectIndex]}
-                onClose={() => setSelectedProjectIndex(null)}
-                onPrev={handlePrevProject}
-                onNext={handleNextProject}
-                currentIndex={selectedProjectIndex}
-                total={projects.length}
-              />
+              <Suspense fallback={null}>
+                <ProjectDetailModal
+                  project={projects[selectedProjectIndex]}
+                  onClose={() => setSelectedProjectIndex(null)}
+                  onPrev={handlePrevProject}
+                  onNext={handleNextProject}
+                  currentIndex={selectedProjectIndex}
+                  total={projects.length}
+                />
+              </Suspense>
             )}
           </AnimatePresence>
         </section>
 
         {/* =========================================
-            CERTIFICATES & ACHIEVEMENTS SECTION
+            CERTIFICATES & ACHIEVEMENTS 3D SECTION
            ========================================= */}
         <section className="mb-24 sm:mb-32 relative" id="certificates">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-10 gap-6 relative">
@@ -822,7 +666,7 @@ function Home() {
                 </span>
               </SplitHeading>
               <p className="text-gray-400 max-w-xl text-xs sm:text-sm">
-                Official industry credentials, national vocational competencies, and verified technical certificates.
+                Official industry credentials, national vocational competencies, and verified technical certificates — swipe or click any 3D card to inspect.
               </p>
             </div>
 
@@ -834,71 +678,62 @@ function Home() {
                 <span>Explore All Certificates</span>
                 <FaArrowRight size={11} />
               </Link>
-
-              <div className="flex gap-2">
-                <button
-                  onClick={() => scroll('left')}
-                  className="w-9 h-9 rounded-full bg-[#1a1a1a] border border-white/15 text-white flex items-center justify-center hover:bg-[#252525] hover:border-[#00bfff] hover:text-[#00bfff] active:scale-95 transition-all group"
-                  aria-label="Scroll Left"
-                >
-                  <span className="material-symbols-outlined text-base group-hover:-translate-x-0.5 transition-transform">
-                    arrow_back
-                  </span>
-                </button>
-                <button
-                  onClick={() => scroll('right')}
-                  className="w-9 h-9 rounded-full bg-[#1a1a1a] border border-white/15 text-white flex items-center justify-center hover:bg-[#252525] hover:border-[#00bfff] hover:text-[#00bfff] active:scale-95 transition-all group"
-                  aria-label="Scroll Right"
-                >
-                  <span className="material-symbols-outlined text-base group-hover:translate-x-0.5 transition-transform">
-                    arrow_forward
-                  </span>
-                </button>
-              </div>
             </div>
           </div>
 
-          {/* Certificates Horizontal Slider */}
-          <div
-            ref={certificateContainerRef}
-            className="flex overflow-x-auto gap-5 pb-6 pt-2 scroll-smooth snap-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            {certificatesData.map((cert, index) => (
-              <MotionCard
-                key={cert.id}
-                index={index}
-                onClick={() => setSelectedCertificateIndex(index)}
-                className="flex-none w-[86%] sm:w-[47%] lg:w-[31.8%] snap-start glass-card rounded-2xl overflow-hidden cursor-pointer border border-white/10 hover:border-[#00bfff]/60 transition-colors duration-300 hover:shadow-[0_12px_26px_rgba(0,191,255,0.16)] flex flex-col justify-between bg-[#11141b]/70"
-              >
+          {/* 3D PERSPECTIVE COVERFLOW SHOWCASE FOR CERTIFICATES */}
+          <Showcase3DCarousel
+            items={certificatesData}
+            ariaLabel="Certificates 3D Showcase"
+            autoPlayInterval={5200}
+            onSelectActive={(idx) => setSelectedCertificateIndex(idx)}
+            renderCard={(cert, _idx, isCenter) => (
+              <div className="flex flex-col justify-between h-full">
                 <div>
-                  <div className="aspect-[4/3] bg-black/40 overflow-hidden relative">
+                  <div className="aspect-[16/10] bg-[#080c14] overflow-hidden relative">
                     <img
                       src={cert.image}
                       alt={cert.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                      className={`w-full h-full object-cover transition-transform duration-700 ${
+                        isCenter ? 'group-hover:scale-105' : ''
+                      }`}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#11141b] via-transparent to-transparent opacity-60" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d121c] via-transparent to-transparent opacity-75" />
 
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                      <span className="inline-flex items-center gap-1.5 bg-[#00bfff] text-black px-3.5 py-1.5 rounded-full font-bold text-[11px] uppercase tracking-wider shadow-[0_0_15px_rgba(0,191,255,0.6)] transform translate-y-1.5 group-hover:translate-y-0 transition-transform duration-200">
-                        <FaEye size={11} />
-                        <span>View Credential</span>
+                    {isCenter && (
+                      <div className="absolute inset-0 bg-black/35 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                        <span className="inline-flex items-center gap-1.5 bg-[#00bfff] text-black px-4 py-1.5 rounded-full font-bold text-[11px] uppercase tracking-wider shadow-[0_0_18px_rgba(0,191,255,0.65)]">
+                          <FaEye size={12} />
+                          <span>Inspect Credential</span>
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="absolute top-3 left-3 z-10">
+                      <span className="bg-black/80 backdrop-blur-md text-[#00bfff] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-[#00bfff]/30">
+                        {cert.category}
                       </span>
                     </div>
 
-                    <div className="absolute top-3 left-3 z-10">
-                      <span className="bg-black/75 backdrop-blur-md text-[#00bfff] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-[#00bfff]/30">
-                        {cert.category}
+                    <div className="absolute top-3 right-3 z-10">
+                      <span className="bg-emerald-500/20 backdrop-blur-md text-emerald-300 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-emerald-500/40 flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        Verified
                       </span>
                     </div>
                   </div>
 
                   <div className="p-4 sm:p-5">
-                    <h3 className="text-white font-bold text-base leading-snug group-hover:text-[#00bfff] transition-colors line-clamp-2 mb-2">
+                    <h3
+                      className={`font-bold text-base leading-snug line-clamp-2 mb-2 transition-colors ${
+                        isCenter ? 'text-white group-hover:text-[#00bfff]' : 'text-slate-200'
+                      }`}
+                    >
                       {cert.title}
                     </h3>
                     {cert.description && (
-                      <p className="text-gray-400 text-xs line-clamp-2 leading-relaxed mb-3">
+                      <p className="text-slate-400 text-xs line-clamp-2 leading-relaxed mb-3">
                         {cert.description}
                       </p>
                     )}
@@ -907,13 +742,13 @@ function Home() {
                         {cert.skills.slice(0, 3).map((skill) => (
                           <span
                             key={skill}
-                            className="bg-white/5 text-gray-300 text-[10px] px-2 py-0.5 rounded border border-white/5"
+                            className="bg-white/5 text-slate-300 text-[10px] px-2 py-0.5 rounded-md border border-white/10"
                           >
                             {skill}
                           </span>
                         ))}
                         {cert.skills.length > 3 && (
-                          <span className="text-[10px] text-gray-500 font-mono py-0.5 px-1">
+                          <span className="text-[10px] text-slate-500 font-mono py-0.5 px-1">
                             +{cert.skills.length - 3}
                           </span>
                         )}
@@ -922,24 +757,26 @@ function Home() {
                   </div>
                 </div>
 
-                <div className="px-4 sm:px-5 py-3 border-t border-white/5 flex justify-between items-center text-gray-400 text-xs">
-                  <span className="truncate max-w-[65%] font-medium text-gray-300">{cert.issuer}</span>
-                  <span className="font-mono text-[11px] text-gray-400">{cert.date}</span>
+                <div className="px-4 sm:px-5 py-3 border-t border-white/[0.06] flex justify-between items-center text-xs">
+                  <span className="truncate max-w-[66%] font-medium text-slate-300">{cert.issuer}</span>
+                  <span className="font-mono text-[11px] text-[#00bfff]">{cert.date}</span>
                 </div>
-              </MotionCard>
-            ))}
-          </div>
+              </div>
+            )}
+          />
 
           <AnimatePresence>
             {selectedCertificateIndex !== null && (
-              <CertificateModal
-                certificate={certificatesData[selectedCertificateIndex]}
-                onClose={() => setSelectedCertificateIndex(null)}
-                onPrev={handlePrevCert}
-                onNext={handleNextCert}
-                currentIndex={selectedCertificateIndex}
-                total={certificatesData.length}
-              />
+              <Suspense fallback={null}>
+                <CertificateModal
+                  certificate={certificatesData[selectedCertificateIndex]}
+                  onClose={() => setSelectedCertificateIndex(null)}
+                  onPrev={handlePrevCert}
+                  onNext={handleNextCert}
+                  currentIndex={selectedCertificateIndex}
+                  total={certificatesData.length}
+                />
+              </Suspense>
             )}
           </AnimatePresence>
         </section>
@@ -981,11 +818,15 @@ function Home() {
                   </SplitHeading>
 
                   {!prefersReducedMotion && (
-                    <div className="hidden sm:block w-36 h-36 md:w-44 md:h-44 shrink-0">
+                    <LazyViewport
+                      rootMargin="320px"
+                      className="hidden sm:block w-36 h-36 md:w-44 md:h-44 shrink-0"
+                      fallback={<div className="w-full h-full rounded-full bg-[#00bfff]/5 animate-pulse" />}
+                    >
                       <Suspense fallback={<div className="w-full h-full rounded-full bg-[#00bfff]/5 animate-pulse" />}>
                         <CyberOrb3D compact />
                       </Suspense>
-                    </div>
+                    </LazyViewport>
                   )}
                 </div>
 
